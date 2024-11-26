@@ -12,7 +12,7 @@
         <mxCell id="lY29EebwksP_RlhY7hUK-2" value="Android" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="50" y="540" width="730" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="lY29EebwksP_RlhY7hUK-3" target="I_qgogvCm689zmonn_Se-11">
+        <mxCell id="I_qgogvCm689zmonn_Se-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="lY29EebwksP_RlhY7hUK-3" target="I_qgogvCm689zmonn_Se-11" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="lY29EebwksP_RlhY7hUK-3" value="Termux app" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -33,39 +33,44 @@
         <mxCell id="9H2rqrs96JmcYUF9J7Ho-2" value="MicroSD" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="565" y="550" width="80" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="9H2rqrs96JmcYUF9J7Ho-2" target="I_qgogvCm689zmonn_Se-5">
+        <mxCell id="I_qgogvCm689zmonn_Se-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="9H2rqrs96JmcYUF9J7Ho-2" target="I_qgogvCm689zmonn_Se-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-3" value="termux-setup-storage" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="I_qgogvCm689zmonn_Se-1">
+        <mxCell id="I_qgogvCm689zmonn_Se-3" value="termux-setup-storage" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="I_qgogvCm689zmonn_Se-1" vertex="1" connectable="0">
           <mxGeometry x="0.2534" y="-3" relative="1" as="geometry">
             <mxPoint y="16" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="I_qgogvCm689zmonn_Se-5" target="I_qgogvCm689zmonn_Se-24">
+        <mxCell id="I_qgogvCm689zmonn_Se-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="I_qgogvCm689zmonn_Se-5" target="I_qgogvCm689zmonn_Se-24" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-5" value="myfiles on MicroSD" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="I_qgogvCm689zmonn_Se-5" value="myfiles on MicroSD" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="542.5" y="420" width="125" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="I_qgogvCm689zmonn_Se-11" target="lY29EebwksP_RlhY7hUK-6">
+        <mxCell id="I_qgogvCm689zmonn_Se-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="I_qgogvCm689zmonn_Se-11" target="lY29EebwksP_RlhY7hUK-6" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-11" value="QEMU" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="I_qgogvCm689zmonn_Se-11" value="QEMU" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="50" y="310" width="730" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="I_qgogvCm689zmonn_Se-23" target="I_qgogvCm689zmonn_Se-29">
+        <mxCell id="I_qgogvCm689zmonn_Se-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="I_qgogvCm689zmonn_Se-23" target="I_qgogvCm689zmonn_Se-29" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-23" value="mount_tag" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="I_qgogvCm689zmonn_Se-23" value="mount_tag" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="542.5" y="200" width="125" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="I_qgogvCm689zmonn_Se-24" target="I_qgogvCm689zmonn_Se-23">
+        <mxCell id="I_qgogvCm689zmonn_Se-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="I_qgogvCm689zmonn_Se-24" target="I_qgogvCm689zmonn_Se-23" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-24" value="virtio" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="5WDWBa2MaWHkQmv1hccp-1" value="9p server" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="I_qgogvCm689zmonn_Se-27">
+          <mxGeometry x="-0.0811" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="I_qgogvCm689zmonn_Se-24" value="virtio" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="542.5" y="317.5" width="125" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-29" value="volume mapping" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="I_qgogvCm689zmonn_Se-29" value="volume mapping" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="542.5" y="87.5" width="125" height="25" as="geometry" />
         </mxCell>
       </root>
