@@ -10,22 +10,22 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="lY29EebwksP_RlhY7hUK-2" value="Android" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="50" y="540" width="720" height="50" as="geometry" />
+          <mxGeometry x="50" y="530" width="720" height="40" as="geometry" />
         </mxCell>
         <mxCell id="vFMtzNfpATVG9BlG07ER-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="lY29EebwksP_RlhY7hUK-3" target="vFMtzNfpATVG9BlG07ER-1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="lY29EebwksP_RlhY7hUK-3" value="Termux app" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="130" y="440" width="560" height="50" as="geometry" />
+          <mxGeometry x="130" y="430" width="560" height="40" as="geometry" />
         </mxCell>
         <mxCell id="lY29EebwksP_RlhY7hUK-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="lY29EebwksP_RlhY7hUK-6" target="lY29EebwksP_RlhY7hUK-8" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="lY29EebwksP_RlhY7hUK-6" value="Alpine" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="205" y="310" width="410" height="40" as="geometry" />
+          <mxGeometry x="220" y="250" width="380" height="40" as="geometry" />
         </mxCell>
         <mxCell id="lY29EebwksP_RlhY7hUK-8" value="docker, Azure SQL Edge" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="240" y="220" width="340" height="40" as="geometry" />
+          <mxGeometry x="240" y="120" width="340" height="40" as="geometry" />
         </mxCell>
         <mxCell id="lY29EebwksP_RlhY7hUK-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="lY29EebwksP_RlhY7hUK-2" target="lY29EebwksP_RlhY7hUK-2" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -36,7 +36,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="vFMtzNfpATVG9BlG07ER-1" value="QEMU" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="170" y="380" width="480" height="30" as="geometry" />
+          <mxGeometry x="170" y="350" width="480" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
