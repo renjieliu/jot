@@ -41,6 +41,9 @@
             <mxPoint y="16" as="offset" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="I_qgogvCm689zmonn_Se-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="I_qgogvCm689zmonn_Se-5" target="I_qgogvCm689zmonn_Se-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="I_qgogvCm689zmonn_Se-5" value="myfiles on MicroSD" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="542.5" y="420" width="125" height="25" as="geometry" />
         </mxCell>
@@ -48,10 +51,22 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="I_qgogvCm689zmonn_Se-11" value="QEMU" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="50" y="290" width="730" height="40" as="geometry" />
+          <mxGeometry x="50" y="310" width="730" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="I_qgogvCm689zmonn_Se-7" value="virtio, 9p server" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="490" y="195" width="230" height="30" as="geometry" />
+        <mxCell id="I_qgogvCm689zmonn_Se-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="I_qgogvCm689zmonn_Se-23" target="I_qgogvCm689zmonn_Se-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="I_qgogvCm689zmonn_Se-23" value="mount_tag" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="542.5" y="200" width="125" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="I_qgogvCm689zmonn_Se-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="I_qgogvCm689zmonn_Se-24" target="I_qgogvCm689zmonn_Se-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="I_qgogvCm689zmonn_Se-24" value="virtio" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="542.5" y="317.5" width="125" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="I_qgogvCm689zmonn_Se-29" value="volume mapping" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="542.5" y="87.5" width="125" height="25" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
