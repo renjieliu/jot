@@ -9,3 +9,9 @@ select B from fib
 where n = 10
 
 
+
+
+
+select ROW_NUMBER() over(order by (select NULL)),  * from STRING_SPLIT('a c d',  ' ') 
+
+
