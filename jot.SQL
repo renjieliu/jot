@@ -21,7 +21,8 @@ select ROW_NUMBER() over(order by (select NULL)),  * from STRING_SPLIT('a c d', 
 go 
 
 
-; 
+go
+
 
 create function u_split_string(
     @input varchar(max)
@@ -55,6 +56,8 @@ select id = -1
 , ''
 where CHARINDEX (@delimiter, @input) = 0 	
 
+
+go 
 
 
 select * from dbo.u_split_string('1.2.3.4.5', '.')
