@@ -82,8 +82,37 @@ ecc = generate_error_correction(data, ecc_length)
 print("错误纠正码：", ecc)
 
 
+########################################################################################################
 
+# import pygame
+# import sys
 
+# # Initialize the screen dimensions
+# w, h = 256, 256
+
+# # Initialize the graphics library
+# pygame.init()
+# screen = pygame.display.set_mode((w, h))
+# pygame.display.set_caption("The XOR Texture")
+
+# # Draw the XOR texture
+# for y in range(h):
+#     for x in range(w):
+#         c = x ^ y
+#         color = (c, c, c)  # Create a grayscale color
+#         screen.set_at((x, y), color)
+
+# # Update the display
+# pygame.display.flip()
+
+# # Keep the window open until closed by the user
+# while True:
+#     for event in pygame.event.get():
+#         if event.type == pygame.QUIT:
+#             pygame.quit()
+#             sys.exit()
+
+########################################################################################################
 
 
 # import tkinter as tk
