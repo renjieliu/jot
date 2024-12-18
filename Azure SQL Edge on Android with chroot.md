@@ -3,8 +3,8 @@ This is the end to end process to make the Azure SQL Edge run on the Android pho
 ### Prerequisite
 
 1. Root the phone, for me, I am following below instruction 
-<br>
-[---->>Unlock Moto<<----](https://www.reddit.com/r/androidroot/comments/1eoqlk1/comment/lhr9iw0/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
+
+[---->> Unlock Motorola G Power (2024) <<----](https://www.reddit.com/r/androidroot/comments/1eoqlk1/comment/lhr9iw0/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
 
 2. Install Termux
 
