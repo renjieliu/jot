@@ -32,6 +32,11 @@ line below
 select * from table_xx
 ```
 
+```python
+print('OK')
+```
+
+
 
 
 
