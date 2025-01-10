@@ -1,245 +1,50 @@
-def generate_error_correction(data, ecc_length):
-    """
-    生成错误纠正码
-    :param data: 输入数据（文本，以字节表示）
-    :param ecc_length: 错误校正码长度
-    :return: 错误校正码
-    """
-    # 二进制的 Galois Field 表 (QR码在GF(256)中运算)
-    gf256 = [1]
-    for _ in range(255):
-        next_val = gf256[-1] * 2
-        if next_val >= 256:
-            next_val ^= 0x11d  # 与生成多项式 x^8 + x^4 + x^3 + x^2 + 1 异或
-        gf256.append(next_val)
+from collections import defaultdict
 
-    gf256_inv = [0] * 256
-    for i, val in enumerate(gf256):
-        gf256_inv[val] = i
+with open('jot.txt') as f:
+    lines = [line.rstrip() for line in f]
 
- # above is done
+y_bound = len(lines)
+x_bound = 0
+antenna_types = defaultdict(list)
+for y, this_line in enumerate(lines):
+    if not x_bound:
+        x_bound = len(this_line)
+    for x, this_char in enumerate(this_line):
+        if this_char != '.':
+            # Keeping track of the (x, y) location of each type of antenna
+            antenna_types[this_char].append((x, y))
 
-    # def multiply_poly(p1, p2):
-    #     """多项式乘法"""
-    #     result = [0] * (len(p1) + len(p2) - 1)
-    #     for i, coef1 in enumerate(p1):
-    #         for j, coef2 in enumerate(p2):
-    #             result[i + j] ^= coef1 * coef2
-    #     return result
+antinodes = set()  # Using a set so duplicates are automatically removed
+for this_type in antenna_types:
+    type_len = len(antenna_types[this_type])
 
-
-    # 创建 Reed-Solomon 生成多项式
-    
-    generator = [1]
-    for r in range(ecc_length):
-        p1 = generator
-        p2 =[1, gf256[r]]
-        result = [0] * (len(p1) + len(p2) - 1)
-        for i, coef1 in enumerate(p1):
-            for j, coef2 in enumerate(p2):
-                result[i + j] ^= coef1 * coef2
-        
-        generator = result
-        print(generator)
-    
-    # for i, g in enumerate(generator): 
-    #     print(i, g)
-
-
-    # 将数据转化为多项式
-    data_poly = [ord(c) for c in data] + [0] * ecc_length 
-    print(data_poly)
- 
- 
-
-    
-
-    # 利用生成多项式计算余数（即错误校正码）
-    for i in range(len(data)):
-        coef = data_poly[i]
-        if coef != 0:
-            for j in range(len(generator)):
-                A = gf256_inv[coef]
-                B = generator[j]
-                x = ( A + B ) % 255 
-                data_poly[i + j] ^= gf256[ x  ]
-
-    return data_poly[-ecc_length:]
+    # Compare each antenna of a type to each antenna after it in the list
+    for a1 in range(0, type_len - 1):
+        first = antenna_types[this_type][a1]
+        for a2 in range(a1 + 1, type_len):
+            second = antenna_types[this_type][a2]
+            # Add both antennas to the antinode set.
+            #antinodes.add(first)
+            #antinodes.add(second)
+            fx, fy = first
+            sx, sy = second
+            # Calculate the x and y distance between the first and second antenna
+            dx = fx - sx
+            dy = fy - sy
+            # Create antinodes in the positive direction from the first antenna
+            while fx + dx in range(0, x_bound) and fy + dy in range(0, y_bound):
+                antinodes.add((fx + dx, fy + dy))
+                fx += dx
+                fy += dy
+            # Create antinodes in the negative direction from the second antenna
+            while sx - dx in range(0, x_bound) and sy - dy in range(0, y_bound):
+                antinodes.add((sx - dx, sy - dy))
+                sx -= dx
+                sy -= dy
+mine = {(0,10) ,(0,15) ,(0,16) ,(0,23) ,(0,25) ,(0,26) ,(0,27) ,(0,32) ,(0,35) ,(0,37) ,(0,41) ,(0,42) ,(0,45) ,(0,46) ,(0,49) ,(1,1) ,(1,17) ,(1,18) ,(1,19) ,(1,21) ,(1,30) ,(1,33) ,(1,34) ,(1,36) ,(1,38) ,(1,39) ,(1,40) ,(1,41) ,(1,47) ,(1,9) ,(10,10) ,(10,18) ,(10,23) ,(10,25) ,(10,26) ,(10,27) ,(10,30) ,(10,35) ,(10,39) ,(10,4) ,(10,42) ,(10,43) ,(10,45) ,(10,48) ,(10,49) ,(10,8) ,(11,0) ,(11,11) ,(11,14) ,(11,16) ,(11,20) ,(11,21) ,(11,22) ,(11,23) ,(11,25) ,(11,28) ,(11,29) ,(11,32) ,(11,37) ,(11,4) ,(11,40) ,(11,42) ,(11,43) ,(11,45) ,(11,47) ,(11,49) ,(11,5) ,(11,6) ,(11,9) ,(12,0) ,(12,11) ,(12,17) ,(12,18) ,(12,22) ,(12,24) ,(12,29) ,(12,32) ,(12,37) ,(12,39) ,(12,41) ,(12,44) ,(12,45) ,(12,46) ,(12,49) ,(12,6) ,(12,9) ,(13,0) ,(13,12) ,(13,14) ,(13,19) ,(13,2) ,(13,22) ,(13,23) ,(13,24) ,(13,25) ,(13,28) ,(13,31) ,(13,35) ,(13,36) ,(13,40) ,(13,42) ,(13,43) ,(13,45) ,(13,46) ,(13,49) ,(13,7) ,(14,11) ,(14,16) ,(14,18) ,(14,21) ,(14,23) ,(14,29) ,(14,33) ,(14,34) ,(14,35) ,(14,36) ,(14,38) ,(14,39) ,(14,4) ,(14,41) ,(14,44) ,(14,46) ,(14,47) ,(14,48) ,(14,49) ,(14,8) ,(14,9) ,(15,16) ,(15,19) ,(15,24) ,(15,25) ,(15,27) ,(15,30) ,(15,31) ,(15,38) ,(15,39) ,(15,40) ,(15,41) ,(15,43) ,(15,47) ,(15,48) ,(15,49) ,(15,6) ,(15,8) ,(15,9) ,(16,10) ,(16,12) ,(16,14) ,(16,17) ,(16,18) ,(16,20) ,(16,24) ,(16,27) ,(16,29) ,(16,32) ,(16,33) ,(16,36) ,(16,37) ,(16,39) ,(16,40) ,(16,44) ,(16,46) ,(16,47) ,(16,48) ,(16,5) ,(16,7) ,(16,8) ,(17,10) ,(17,11) ,(17,14) ,(17,2) ,(17,21) ,(17,24) ,(17,25) ,(17,26) ,(17,30) ,(17,32) ,(17,35) ,(17,36) ,(17,37) ,(17,40) ,(17,44) ,(17,45) ,(17,46) ,(17,47) ,(17,49) ,(18,10) ,(18,12) ,(18,15) ,(18,21) ,(18,25) ,(18,26) ,(18,33) ,(18,34) ,(18,35) ,(18,36) ,(18,40) ,(18,43) ,(18,44) ,(18,45) ,(18,48) ,(18,6) ,(19,13) ,(19,14) ,(19,18) ,(19,22) ,(19,26) ,(19,27) ,(19,3) ,(19,30) ,(19,32) ,(19,33) ,(19,34) ,(19,37) ,(19,39) ,(19,40) ,(19,43) ,(19,44) ,(2,14) ,(2,16) ,(2,17) ,(2,18) ,(2,2) ,(2,34) ,(2,35) ,(2,39) ,(2,40) ,(2,43) ,(2,44) ,(2,7) ,(20,10) ,(20,11) ,(20,12) ,(20,14) ,(20,15) ,(20,16) ,(20,2) ,(20,25) ,(20,26) ,(20,27) ,(20,28) ,(20,33) ,(20,35) ,(20,37) ,(20,42) ,(20,43) ,(20,5) ,(20,9) ,(21,1) ,(21,12) ,(21,13) ,(21,15) ,(21,18) ,(21,20) ,(21,23) ,(21,25) ,(21,27) ,(21,28) ,(21,32) ,(21,34) ,(21,39) ,(21,40) ,(21,41) ,(21,42) ,(21,43) ,(21,5) ,(21,6) ,(22,10) ,(22,11) ,(22,12) ,(22,13) ,(22,16) ,(22,19) ,(22,20) ,(22,21) ,(22,22) ,(22,24) ,(22,25) ,(22,27) ,(22,28) ,(22,29) ,(22,30) ,(22,31) ,(22,37) ,(22,4) ,(22,40) ,(22,41) ,(22,48) ,(22,8) ,(22,9) ,(23,0) ,(23,17) ,(23,19) ,(23,22) ,(23,23) ,(23,26) ,(23,28) ,(23,29) ,(23,30) ,(23,31) ,(23,34) ,(23,36) ,(23,37) ,(23,39) ,(23,40) ,(23,44) ,(24,1) ,(24,13) ,(24,16) ,(24,18) ,(24,19) ,(24,21) ,(24,23) ,(24,24) ,(24,28) ,(24,29) ,(24,38) ,(24,39) ,(24,4) ,(24,46) ,(24,48) ,(24,6) ,(24,8) ,(24,9) ,(25,0) ,(25,1) ,(25,10) ,(25,11) ,(25,13) ,(25,19) ,(25,20) ,(25,26) ,(25,28) ,(25,29) ,(25,30) ,(25,37) ,(25,38) ,(25,41) ,(25,42) ,(25,48) ,(25,6) ,(25,8) ,(26,10) ,(26,11) ,(26,12) ,(26,13) ,(26,14) ,(26,17) ,(26,20) ,(26,22) ,(26,27) ,(26,28) ,(26,29) ,(26,3) ,(26,31) ,(26,35) ,(26,37) ,(26,41) ,(26,46) ,(27,13) ,(27,14) ,(27,15) ,(27,19) ,(27,21) ,(27,24) ,(27,25) ,(27,26) ,(27,30) ,(27,31) ,(27,35) ,(27,36) ,(27,41) ,(27,42) ,(27,48) ,(27,7) ,(27,9) ,(28,0) ,(28,1) ,(28,10) ,(28,11) ,(28,13) ,(28,15) ,(28,2) ,(28,21) ,(28,22) ,(28,25) ,(28,28) ,(28,29) ,(28,30) ,(28,31) ,(28,34) ,(28,35) ,(28,38) ,(28,4) ,(28,45) ,(28,46) ,(28,47) ,(28,6) ,(28,9) ,(29,0) ,(29,1) ,(29,11) ,(29,12) ,(29,13) ,(29,14) ,(29,24) ,(29,31) ,(29,32) ,(29,33) ,(29,34) ,(29,41) ,(29,48) ,(29,8) ,(3,15) ,(3,18) ,(3,19) ,(3,21) ,(3,28) ,(3,30) ,(3,38) ,(3,39) ,(3,5) ,(3,8) ,(30,0) ,(30,1) ,(30,13) ,(30,17) ,(30,20) ,(30,21) ,(30,23) ,(30,25) ,(30,3) ,(30,31) ,(30,32) ,(30,33) ,(30,35) ,(30,36) ,(30,4) ,(30,46) ,(30,5) ,(30,9) ,(31,13) ,(31,15) ,(31,19) ,(31,2) ,(31,22) ,(31,25) ,(31,29) ,(31,31) ,(31,32) ,(31,33) ,(31,36) ,(31,38) ,(31,42) ,(31,43) ,(31,46) ,(31,47) ,(31,48) ,(31,49) ,(31,7) ,(31,9) ,(32,1) ,(32,11) ,(32,18) ,(32,19) ,(32,21) ,(32,23) ,(32,24) ,(32,26) ,(32,3) ,(32,30) ,(32,31) ,(32,32) ,(32,33) ,(32,38) ,(32,40) ,(32,42) ,(32,49) ,(32,5) ,(32,9) ,(33,15) ,(33,16) ,(33,19) ,(33,20) ,(33,22) ,(33,27) ,(33,29) ,(33,3) ,(33,30) ,(33,33) ,(33,34) ,(33,36) ,(33,39) ,(33,4) ,(33,40) ,(33,42) ,(33,45) ,(33,5) ,(33,8) ,(34,1) ,(34,10) ,(34,11) ,(34,12) ,(34,14) ,(34,18) ,(34,19) ,(34,23) ,(34,28) ,(34,29) ,(34,30) ,(34,32) ,(34,33) ,(34,44) ,(34,47) ,(34,49) ,(34,5) ,(34,8) ,(34,9) ,(35,1) ,(35,13) ,(35,18) ,(35,24) ,(35,26) ,(35,27) ,(35,28) ,(35,29) ,(35,31) ,(35,32) ,(35,34) ,(35,35) ,(35,38) ,(35,45) ,(35,46) ,(35,6) ,(35,8) ,(36,13) ,(36,17) ,(36,19) ,(36,22) ,(36,26) ,(36,27) ,(36,30) ,(36,34) ,(36,35) ,(36,4) ,(36,41) ,(36,47) ,(36,48) ,(36,6) ,(36,7) ,(36,9) ,(37,1) ,(37,10) ,(37,11) ,(37,13) ,(37,16) ,(37,25) ,(37,26) ,(37,28) ,(37,31) ,(37,35) ,(37,36) ,(37,39) ,(37,41) ,(37,43) ,(37,45) ,(37,48) ,(37,49) ,(37,7) ,(37,8) ,(38,0) ,(38,15) ,(38,16) ,(38,19) ,(38,24) ,(38,25) ,(38,27) ,(38,30) ,(38,32) ,(38,33) ,(38,35) ,(38,41) ,(38,42) ,(38,6) ,(39,10) ,(39,11) ,(39,14) ,(39,17) ,(39,19) ,(39,21) ,(39,23) ,(39,25) ,(39,29) ,(39,33) ,(39,35) ,(39,36) ,(39,37) ,(39,39) ,(39,4) ,(39,6) ,(39,7) ,(4,0) ,(4,12) ,(4,13) ,(4,17) ,(4,18) ,(4,20) ,(4,24) ,(4,25) ,(4,3) ,(4,33) ,(4,34) ,(4,41) ,(4,44) ,(4,45) ,(4,48) ,(4,49) ,(4,8) ,(40,11) ,(40,13) ,(40,15) ,(40,22) ,(40,26) ,(40,34) ,(40,36) ,(40,37) ,(40,39) ,(40,43) ,(40,6) ,(41,11) ,(41,12) ,(41,2) ,(41,20) ,(41,21) ,(41,22) ,(41,25) ,(41,27) ,(41,3) ,(41,31) ,(41,35) ,(41,37) ,(41,38) ,(41,4) ,(42,11) ,(42,13) ,(42,14) ,(42,16) ,(42,20) ,(42,21) ,(42,29) ,(42,3) ,(42,32) ,(42,36) ,(42,37) ,(42,39) ,(42,9) ,(43,1) ,(43,10) ,(43,14) ,(43,15) ,(43,19) ,(43,20) ,(43,25) ,(43,27) ,(43,37) ,(43,38) ,(43,39) ,(43,43) ,(43,44) ,(43,5) ,(44,0) ,(44,13) ,(44,15) ,(44,18) ,(44,19) ,(44,23) ,(44,24) ,(44,28) ,(44,30) ,(44,37) ,(44,38) ,(44,48) ,(44,9) ,(45,0) ,(45,13) ,(45,16) ,(45,17) ,(45,18) ,(45,28) ,(45,3) ,(45,33) ,(45,37) ,(45,39) ,(45,40) ,(45,5) ,(45,7) ,(45,8) ,(46,12) ,(46,16) ,(46,17) ,(46,18) ,(46,26) ,(46,3) ,(46,39) ,(46,4) ,(46,40) ,(46,5) ,(46,7) ,(47,15) ,(47,16) ,(47,18) ,(47,26) ,(47,27) ,(47,40) ,(47,41) ,(47,44) ,(47,49) ,(47,6) ,(48,11) ,(48,14) ,(48,15) ,(48,17) ,(48,19) ,(48,28) ,(48,32) ,(48,37) ,(48,40) ,(48,42) ,(48,46) ,(48,48) ,(48,5) ,(48,9) ,(49,13) ,(49,14) ,(49,16) ,(49,19) ,(49,20) ,(49,26) ,(49,27) ,(49,28) ,(49,3) ,(49,33) ,(49,36) ,(49,37) ,(49,4) ,(49,41) ,(49,42) ,(49,43) ,(49,8) ,(5,11) ,(5,19) ,(5,2) ,(5,29) ,(5,30) ,(5,33) ,(5,37) ,(5,38) ,(5,44) ,(5,45) ,(5,48) ,(5,9) ,(6,0) ,(6,10) ,(6,12) ,(6,14) ,(6,18) ,(6,19) ,(6,20) ,(6,22) ,(6,23) ,(6,32) ,(6,35) ,(6,36) ,(6,38) ,(6,42) ,(6,44) ,(6,47) ,(7,1) ,(7,10) ,(7,11) ,(7,17) ,(7,24) ,(7,27) ,(7,30) ,(7,31) ,(7,32) ,(7,33) ,(7,39) ,(7,46) ,(8,11) ,(8,17) ,(8,2) ,(8,26) ,(8,27) ,(8,29) ,(8,30) ,(8,31) ,(8,32) ,(8,35) ,(8,36) ,(8,40) ,(8,45) ,(8,49) ,(8,5) ,(8,9) ,(9,0) ,(9,15) ,(9,16) ,(9,18) ,(9,22) ,(9,23) ,(9,26) ,(9,3) ,(9,31) ,(9,33) ,(9,34) ,(9,41) ,(9,42) ,(9,44) ,(9,46) ,(9,47) ,(9,48)}
+delta = antinodes - mine
+print(len(delta))
+print(delta)
+print(f"Part 2: {len(antinodes)}")
 
 
-
-
-# def galois_mult(a, b):
-#     """伽罗瓦域中的乘法"""
-#     return (a + b) % 255
-
-
- 
-data = "HELLO WORLD"  # 输入文本
-ecc_length = 10  # 错误纠正码长度
-
-ecc = generate_error_correction(data, ecc_length)
-print("错误纠正码：", ecc)
-
-
-########################################################################################################
-
-# import pygame
-# import sys
-
-# # Initialize the screen dimensions
-# w, h = 256, 256
-
-# # Initialize the graphics library
-# pygame.init()
-# screen = pygame.display.set_mode((w, h))
-# pygame.display.set_caption("The XOR Texture")
-
-# # Draw the XOR texture
-# for y in range(h):
-#     for x in range(w):
-#         c = x ^ y
-#         color = (c, c, c)  # Create a grayscale color
-#         screen.set_at((x, y), color)
-
-# # Update the display
-# pygame.display.flip()
-
-# # Keep the window open until closed by the user
-# while True:
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             pygame.quit()
-#             sys.exit()
-
-########################################################################################################
-
-
-# import tkinter as tk
-# import math
-# import time
-
-
-# class SpinningCircle:
-#     def __init__(self, root, radius=50, dot_radius=5, num_dots=12, speed=50):
-#         self.root = root
-#         self.radius = radius
-#         self.dot_radius = dot_radius
-#         self.num_dots = num_dots
-#         self.speed = speed  # milliseconds delay between frames
-#         self.angle = 0  # initial angle
-#         self.canvas = tk.Canvas(root, width=2*radius+40, height=2*radius+40, bg='white')
-#         self.canvas.pack()
-#         self.dots = []
-#         self.cnt = 0
-#         self.create_dots()
-#         time.sleep(1)
-#         self.animate()
-
-
-#     def create_dots(self):
-#         """Create dots arranged in a circular pattern"""
-#         for i in range(self.num_dots):
-#             angle = (2 * math.pi / self.num_dots) * i
-#             x = self.radius * math.cos(angle) + self.radius + 20
-#             y = self.radius * math.sin(angle) + self.radius + 20
-#             dot = self.canvas.create_oval(
-#                 x - self.dot_radius, y - self.dot_radius, 
-#                 x + self.dot_radius, y + self.dot_radius, 
-#                 fill="black"
-#             )
-#             self.dots.append(dot)
-
-#     def animate(self):
-#         """Animate the spinning circle by changing dot opacities in sequence"""
-#         self.angle = (self.angle + 1) % self.num_dots
-#         self.cnt += 1 
-        
-#         for i, dot in enumerate(self.dots):
-#             # Adjust the dot's brightness based on its position in the circle
-#             brightness = 255 - int(200 * ((i - self.angle) % self.num_dots) / self.num_dots)
-#             color = f'#{brightness:02x}{brightness:02x}{brightness:02x}'
-#             self.canvas.itemconfig(dot, fill=color)
-        
-#         self.root.after(self.speed, self.animate)
-
-# # Main application window
-# if __name__ == "__main__":
-#     root = tk.Tk()
-#     root.title("Code-Based Spinning Circle")
-#     app = SpinningCircle(root)
-#     root.mainloop()
-
-
-
-
-# import itertools
-# import sys
-# import time
-
-# # Characters to create a spinning circle
-# spinner = itertools.cycle(['|', '/', '-', '\\'])
-
-# def loading_animation(duration=5):
-#     start_time = time.time()
-#     while time.time() - start_time < duration:
-#         sys.stdout.write('\r' + next(spinner))
-#         sys.stdout.flush()
-#         time.sleep(0.1)
-#     # Reset the line after the animation is done
-#     sys.stdout.write('\rDone!\n')
-
-# # Run the loading animation for 5 seconds
-# loading_animation(5)
-
-
-
-# import os
-# import dotenv 
-# import pymssql
-
-# dotenv.load_dotenv(".env")
-
-# MSSQL_DB_SERVER = os.getenv('MSSQL_DB_SERVER')
-# MSSQL_DB = os.getenv('MSSQL_DB')
-# MSSQL_DB_USER = os.getenv('MSSQL_DB_USER')
-# MSSQL_DB_PWD = os.getenv('MSSQL_DB_PWD')
-# MSSQL_DB = os.getenv('MSSQL_DB')
-
-
-# def exec_sql(MSSQL_DB_SERVER, MSSQL_DB_USER, MSSQL_DB_PWD, SQL_Command, mode): 
-#     with pymssql.connect(server=MSSQL_DB_SERVER, database=MSSQL_DB, user=MSSQL_DB_USER,password=MSSQL_DB_PWD) as connection:
-#         with connection.cursor() as cursor:
-#             cursor.execute(SQL_Command)
-#             if mode == 1:
-#                 print(cursor.fetchall())
-#             else:
-#                 print(f'{sql} runs successfully!')
-#                 connection.commit()
-            
-
-# sql = 'select * from stock_20220112'
-
-# mode = 1 # mode 1 --> select , 2 --> update, delete, insert
-# exec_sql(MSSQL_DB_SERVER, MSSQL_DB_USER, MSSQL_DB_PWD, sql, mode)
-
-
-
-
-
-# # This is a package in preview.
-# from azureml.opendatasets import NycTlcYellow
-
-# from datetime import datetime
-# from dateutil import parser
-
-
-# end_date = parser.parse('2018-05-06')
-# start_date = parser.parse('2018-05-01')
-# nyc_tlc = NycTlcYellow(start_date=start_date, end_date=end_date)
-# nyc_tlc_df = nyc_tlc.to_pandas_dataframe()
-
-# nyc_tlc_df.info()
-
-
- 
