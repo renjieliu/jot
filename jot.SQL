@@ -14,4 +14,3 @@ where n = 10
 
 select * from STRING_SPLIT('a|c|d',  '|' )
 
-
