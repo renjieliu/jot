@@ -9,7 +9,7 @@ dp = defaultdict(int)
 
 stones = [0, 7, 198844, 5687836, 58, 2478, 25475, 894] 
 for stone in stones: # this could be table dp
-    dp[(stone, 0)] += 1
+    dp[(stone, 0)] += 1 # inital
 
 blinks = 75
 
@@ -24,14 +24,15 @@ for blink in range(1, blinks+1):
     for (stone, step), count in dp.items():
         if blink == step+1:
             if stone == 0:
-                nxt_dp[(1, blink)] += count
-            elif len(str(stone)) % 2 == 0:
+                nxt_dp[(1, blink)] += count  # this is to update the previous records, form a new string
+            elif len(str(stone)) % 2 == 0: 
                 a, b = split(stone)
                 nxt_dp[(a, blink)] += count
                 nxt_dp[(b, blink)] += count
             else:
                 nxt_dp[(stone*2024, blink)] += count
     dp = nxt_dp
+
 print(len(dp))
 print(sum( count for (a, b), count in dp.items() if b == blinks))
                 
