@@ -24,7 +24,7 @@ rounds(r,i,f) as (
        where length(i::text)%2=0
        ) s
    group by r, i
-   )
+)
 select (select sum(f) from rounds where r=25) as part1,
        (select sum(f) from rounds where r=75) as part2
 ;
