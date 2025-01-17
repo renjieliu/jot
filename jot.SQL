@@ -70,3 +70,28 @@ from f
 
 
 
+
+
+select * from Employees
+
+; with cte as 
+(
+select 
+j= (select * from Employees for json path, WITHOUT_ARRAY_WRAPPER) 
+)
+select JSON_query(j , '$.employee_name') AS employee_name from cte 
+ 
+
+
+
+
+;WITH cte AS (
+    SELECT 
+        j = (SELECT * FROM Employees FOR JSON PATH) 
+)
+SELECT 
+    JSON_VALUE(value, '$.employee_name') AS employee_name
+FROM 
+    cte
+CROSS APPLY 
+    OPENJSON(j);
