@@ -95,3 +95,12 @@ FROM
     cte
 CROSS APPLY 
     OPENJSON(j);
+
+
+
+; with cte as 
+(select 1 id 
+union ALL
+select c2.id +1 from cte, cte c2
+)
+select * from cte 
