@@ -30,6 +30,7 @@ GO
 
 
 
+
 declare @Input varchar(max) =
 '4022724 951333 0 21633 5857 97 702 6'
 
@@ -104,3 +105,53 @@ union ALL
 select c2.id +1 from cte, cte c2
 )
 select * from cte 
+
+
+
+go 
+
+
+
+drop table if exists #t
+
+;
+with base as 
+(select 
+id= 1
+,col = REPLICATE(cast('a' as varchar(max)), 100000)  
+)
+, cte as 
+(select 
+id = 1
+, curr = left (col, 1)
+, rem = right(col, len(col) - 1)
+from base 
+union all 
+select 
+id + 1 
+, curr = left(rem, 1)
+, rem = right(rem, len(rem) - 1) 
+from cte
+where len(rem) > 0
+)
+, swap as 
+(select id = cast(id as varchar(max))
+	, curr = cast(curr as varchar(max))
+from cte where id not in (999, 1000)
+ union all 
+ select 1000 id, curr from cte where id = 999 
+ union all 
+ select 999 id, curr from cte where id = 1000
+)  -- select len(col)  from base
+ select x = string_agg(concat(id, ',', curr), '|') 
+ within group (order by id)  into #t from swap
+ option (maxrecursion  0)
+
+
+
+select len(x) from #t
+
+
+
+
+
