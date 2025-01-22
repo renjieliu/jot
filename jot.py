@@ -13,8 +13,6 @@ for this_line in lines:
     robot_nums = [int(x) for x in re.findall('-?\d+', this_line)]
     robots.append(robot_nums)
 
-print(robots)
-
 def get_quadrant(x: int, y: int):
     if x == area_width // 2 or y == area_height // 2:
         return None
@@ -53,6 +51,7 @@ for i in range(10000):
 
 # Guess: the picture will have a minimum safety score because lots of robots will be grouped together
 min_safety = safety_scores.index(min(safety_scores))
+
 
 # Print the picture, for fun (and confirmation)
 tree_picture = set()
