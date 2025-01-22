@@ -1,28 +1,103 @@
-ax = 17
-ay = 86
+import re
 
-bx = 84 
-by = 37
+filename = 'jot.txt'
+area_width = 101
+area_height = 103
 
-x = 7870 
-y = 6450
 
-arr = []
-found = 0
-for A in range(101):
-    arr.append([])
-    arr[-1].append( [A*ax, A*ay] )
-    for B in range(101):
-        arr[-1].append([A*ax + B*bx, A*ay + B*by])
-        # if A == 80 and B == 40 :
-        #     print(arr[-1][-1])
-        if arr[-1][-1] == [x, y]:
-            found = 1
-            print("cost: ", A*3 + B*1)
-            break
-    # print(arr)       
-    if found == 1:
-        break 
+with open(filename) as f:
+    lines = [line.rstrip() for line in f]
+
+robots = []
+for this_line in lines:
+    robot_nums = [int(x) for x in re.findall('-?\d+', this_line)]
+    robots.append(robot_nums)
+
+print(robots)
+
+def get_quadrant(x: int, y: int):
+    if x == area_width // 2 or y == area_height // 2:
+        return None
+    if x < area_width // 2 and y < area_height // 2:
+        return 0
+    if x > area_width // 2 and y < area_height // 2:
+        return 1
+    if x < area_width // 2 and y > area_height // 2:
+        return 2
+    if x > area_width // 2 and y > area_height // 2:
+        return 3
+
+
+def get_robot_position(bot: list, s: int):
+    px, py = bot[0], bot[1]
+    dx, dy = bot[2], bot[3]
+    px = (px + dx * s) % area_width
+    py = (py + dy * s) % area_height
+    return px, py
+
+
+safety_scores = []
+for i in range(10000):
+    quadrants = [0, 0, 0, 0]
+    for this_robot in robots:
+        bx, by = get_robot_position(this_robot, i)
+        q = get_quadrant(bx, by)
+        if q is not None:
+            quadrants[q] += 1
+    safety_score = 1
+    for q in quadrants:
+        safety_score *= q
+    safety_scores.append(safety_score)
+    if i == 100:
+        print(f"Part 1: {safety_score}")
+
+# Guess: the picture will have a minimum safety score because lots of robots will be grouped together
+min_safety = safety_scores.index(min(safety_scores))
+
+# Print the picture, for fun (and confirmation)
+tree_picture = set()
+for this_robot in robots:
+    tree_picture.add(get_robot_position(this_robot, min_safety))
+# print(tree_picture)
+
+
+# for this_y in range(area_height):
+#     print_line = ''
+#     for this_x in range(area_width):
+#         if (this_x, this_y) in tree_picture:
+#             print_line += '🟢'
+#         else:
+#             print_line += '⬜'
+#     print(print_line)
+
+print(f"Part 2: {min_safety}")
+
+
+# ax = 17
+# ay = 86
+
+# bx = 84 
+# by = 37
+
+# x = 7870 
+# y = 6450
+
+# arr = []
+# found = 0
+# for A in range(101):
+#     arr.append([])
+#     arr[-1].append( [A*ax, A*ay] )
+#     for B in range(101):
+#         arr[-1].append([A*ax + B*bx, A*ay + B*by])
+#         # if A == 80 and B == 40 :
+#         #     print(arr[-1][-1])
+#         if arr[-1][-1] == [x, y]:
+#             found = 1
+#             print("cost: ", A*3 + B*1)
+#             break
+#     # print(arr)       
+#     if found == 1:
+#         break 
 
  
      
