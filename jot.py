@@ -63,8 +63,8 @@ def find_path(maze_map: dict, s: tuple, g: tuple):
                     new_score = current_score + 1001
                 elif nd == (current_d - 1) % 4:  # We are turning counter-clockwise
                     new_score = current_score + 1001
-                else:  # We are turning around
-                    new_score = current_score + 2001
+                # else:  # We are turning around
+                #     new_score = current_score + 2001
                 if ((nx, ny), nd) not in visited_from or new_score < scores[((nx, ny), nd)]:
                     try:
                         if new_score < scores[((nx, ny), nd)]:
