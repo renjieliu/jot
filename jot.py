@@ -1,75 +1,168 @@
-import re
+from collections import deque
+import heapq
 
-filename = 'jot.txt'
-area_width = 101
-area_height = 103
+with open('jot.txt') as path_score:
+    lines = [line.rstrip() for line in path_score]
 
+x_bound = len(lines[0])
+y_bound = len(lines)
+maze = dict()
+solution_paths = []
 
-with open(filename) as f:
-    lines = [line.rstrip() for line in f]
-
-robots = []
-for this_line in lines:
-    robot_nums = [int(x) for x in re.findall('-?\d+', this_line)]
-    robots.append(robot_nums)
-
-def get_quadrant(x: int, y: int):
-    if x == area_width // 2 or y == area_height // 2:
-        return None
-    if x < area_width // 2 and y < area_height // 2:
-        return 0
-    if x > area_width // 2 and y < area_height // 2:
-        return 1
-    if x < area_width // 2 and y > area_height // 2:
-        return 2
-    if x > area_width // 2 and y > area_height // 2:
-        return 3
+for y, this_line in enumerate(lines):
+    for x, this_char in enumerate(this_line):
+        if this_char == 'S':
+            start = (x, y)
+            maze[(x, y)] = '.'
+        elif this_char == 'E':
+            goal = (x, y)
+            maze[(x, y)] = '.'
+        else:
+            maze[(x, y)] = this_char
 
 
-def get_robot_position(bot: list, s: int):
-    px, py = bot[0], bot[1]
-    dx, dy = bot[2], bot[3]
-    px = (px + dx * s) % area_width
-    py = (py + dy * s) % area_height
-    return px, py
+def draw_path(maze_map: dict, maze_path: list):
+    print()
+    for py in range(0, y_bound):
+        new_line = ''
+        for px in range(0, x_bound):
+            if (px, py) == start:
+                new_line += '⭐'
+            elif (px, py) == goal:
+                new_line += '⭐'
+            elif (px, py) in maze_path :
+                new_line += '👠'
+            elif maze_map[(px, py)] == '#':
+                new_line += '🪨'
+            else:
+                new_line += '◼️'
+        print(new_line)
+    print()
 
 
-safety_scores = []
-for i in range(10000):
-    quadrants = [0, 0, 0, 0]
-    for this_robot in robots:
-        bx, by = get_robot_position(this_robot, i)
-        q = get_quadrant(bx, by)
-        if q is not None:
-            quadrants[q] += 1
-    safety_score = 1
-    for q in quadrants:
-        safety_score *= q
-    safety_scores.append(safety_score)
-    if i == 100:
-        print(f"Part 1: {safety_score}")
+def find_path(maze_map: dict, s: tuple, g: tuple):
+    d = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+    direction = 0
+    score = 0
+    queue = [(score, s, direction)]
+    heapq.heapify(queue)
+    visited_from = {(s, direction): None}
+    scores = {(s, direction): 0}
+    final_score = 0
+    while queue:
+        current_score, (cx, cy), current_d = heapq.heappop(queue)
+        if (cx, cy) == g:
+            final_score = current_score
+            break
+        for nd, (dx, dy) in enumerate(d):
+            nx, ny = cx + dx, cy + dy
+            if maze_map[(nx, ny)] != '#':
+                if nd == current_d:  # If we're going in the same direction we're facing
+                    new_score = current_score + 1
+                elif nd == (current_d + 1) % 4:  # We are turning clockwise
+                    new_score = current_score + 1001
+                elif nd == (current_d - 1) % 4:  # We are turning counter-clockwise
+                    new_score = current_score + 1001
+                else:  # We are turning around
+                    new_score = current_score + 2001
+                if ((nx, ny), nd) not in visited_from or new_score < scores[((nx, ny), nd)]:
+                    try:
+                        if new_score < scores[((nx, ny), nd)]:
+                            pass
+                    except KeyError:
+                        pass
+                    visited_from[((nx, ny), nd)] = ((cx, cy), current_d)
+                    scores[((nx, ny), nd)] = new_score
+                    heapq.heappush(queue, (new_score, (nx, ny), nd))
+            else:
+                pass
 
-# Guess: the picture will have a minimum safety score because lots of robots will be grouped together
-min_safety = safety_scores.index(min(safety_scores))
+    next_coord, next_dir = visited_from[(goal, current_d)]
+    path = [next_coord]
+    while next_coord != start:
+        next_coord, next_dir = visited_from[(next_coord, next_dir)]
+        path.append(next_coord)
+    return [path, final_score]
 
 
-# Print the picture, for fun (and confirmation)
-tree_picture = set()
-for this_robot in robots:
-    tree_picture.add(get_robot_position(this_robot, min_safety))
-# print(tree_picture)
+optimal_path, path_score = find_path(maze, start, goal)
+print(f"Part 1: {path_score}")
 
 
-# for this_y in range(area_height):
-#     print_line = ''
-#     for this_x in range(area_width):
-#         if (this_x, this_y) in tree_picture:
-#             print_line += '🟢'
-#         else:
-#             print_line += '⬜'
-#     print(print_line)
 
-print(f"Part 2: {min_safety}")
+
+# import re
+
+# filename = 'jot.txt'
+# area_width = 101
+# area_height = 103
+
+
+# with open(filename) as f:
+#     lines = [line.rstrip() for line in f]
+
+# robots = []
+# for this_line in lines:
+#     robot_nums = [int(x) for x in re.findall('-?\d+', this_line)]
+#     robots.append(robot_nums)
+
+# def get_quadrant(x: int, y: int):
+#     if x == area_width // 2 or y == area_height // 2:
+#         return None
+#     if x < area_width // 2 and y < area_height // 2:
+#         return 0
+#     if x > area_width // 2 and y < area_height // 2:
+#         return 1
+#     if x < area_width // 2 and y > area_height // 2:
+#         return 2
+#     if x > area_width // 2 and y > area_height // 2:
+#         return 3
+
+
+# def get_robot_position(bot: list, s: int):
+#     px, py = bot[0], bot[1]
+#     dx, dy = bot[2], bot[3]
+#     px = (px + dx * s) % area_width
+#     py = (py + dy * s) % area_height
+#     return px, py
+
+
+# safety_scores = []
+# for i in range(10000):
+#     quadrants = [0, 0, 0, 0]
+#     for this_robot in robots:
+#         bx, by = get_robot_position(this_robot, i)
+#         q = get_quadrant(bx, by)
+#         if q is not None:
+#             quadrants[q] += 1
+#     safety_score = 1
+#     for q in quadrants:
+#         safety_score *= q
+#     safety_scores.append(safety_score)
+#     if i == 100:
+#         print(f"Part 1: {safety_score}")
+
+# # Guess: the picture will have a minimum safety score because lots of robots will be grouped together
+# min_safety = safety_scores.index(min(safety_scores))
+
+
+# # Print the picture, for fun (and confirmation)
+# tree_picture = set()
+# for this_robot in robots:
+#     tree_picture.add(get_robot_position(this_robot, min_safety))
+# # print(tree_picture)
+
+
+# # for this_y in range(area_height):
+# #     print_line = ''
+# #     for this_x in range(area_width):
+# #         if (this_x, this_y) in tree_picture:
+# #             print_line += '🟢'
+# #         else:
+# #             print_line += '⬜'
+# #     print(print_line)
+
+# print(f"Part 2: {min_safety}")
 
 
 # ax = 17
