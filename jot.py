@@ -66,11 +66,11 @@ def find_path(maze_map: dict, s: tuple, g: tuple):
                 # else:  # We are turning around
                 #     new_score = current_score + 2001
                 if ((nx, ny), nd) not in visited_from or new_score < scores[((nx, ny), nd)]:
-                    try:
-                        if new_score < scores[((nx, ny), nd)]:
-                            pass
-                    except KeyError:
-                        pass
+                    # try:
+                    #     if new_score < scores[((nx, ny), nd)]:
+                    #         pass
+                    # except KeyError:
+                    #     pass
                     visited_from[((nx, ny), nd)] = ((cx, cy), current_d)
                     scores[((nx, ny), nd)] = new_score
                     heapq.heappush(queue, (new_score, (nx, ny), nd))

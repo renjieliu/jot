@@ -10,9 +10,28 @@ cross APPLY
  (select * from string_split_RL(SUBSTRING( [value], 2 , len([value])-2 ), ',', 1)) sub
 
 --score/(nxt_r, nxt_c)/face/curr_r/curr_c|
---1000/(201, 200)/E/[curr_r,curr_c] 
+--1000/(201, 200)/E/(201, 400)|1000/(201, 200)/E/(2001, 4000)
+
+-- does 201, 200, E exist? 
+
+; with cte as 
+(
+select 
+* 
+from 
+string_split_rl('1000/(201,200)/E/(201,400)|1000/(201,200)/E/(2001,4000)', '|', 1) og 
+cross apply  
+ (select x = TRANSLATE([value], '()', '') ) _ 
+) 
+select * from cte
 
 
+select * from string_split_RL( 
+ (select TRANSLATE('1000/(201,200)/E/(201,400)|1000/(201,200)/E/(2001,4000)', '(,)', ' / '))
+ , 
+ '|'
+ ,1 
+)  
 
 declare @totalscore bigint, @r int, @c int, @stk varchar(max)
 
