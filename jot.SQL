@@ -1,3 +1,49 @@
+select
+group_ID = main.ordinal
+, subgroup_Id = case when sub.ordinal = 1 then 'score'
+				     when sub.ordinal = 2 then 'r'
+					 when sub.ordinal = 3 then 'c'
+				end
+, sub.[value]
+ from string_split_RL('(100,100,300)|(100,200,300)|(101,201,301)', '|', 1) main
+cross APPLY
+ (select * from string_split_RL(SUBSTRING( [value], 2 , len([value])-2 ), ',', 1)) sub
+
+--score/(nxt_r, nxt_c)/face/curr_r/curr_c|
+--1000/(201, 200)/E/[curr_r,curr_c] 
+
+
+
+declare @totalscore bigint, @r int, @c int, @stk varchar(max)
+
+
+; with cte as (
+select
+group_ID = main.ordinal
+, score = case when sub.ordinal = 1 then sub.[value] else null end 
+, r =  case when sub.ordinal = 2 then sub.[value] else null end 
+, c =  case when sub.ordinal = 3 then sub.[value] else null end 
+ from string_split_RL('(100,200,300)|(101,201,301)', '|', 1) main
+cross APPLY 
+ (select * from string_split_RL(SUBSTRING( [value], 2 , len([value])-2 ), ',', 1)) sub
+)
+select 
+rnk = DENSE_RANK() over (partition by group_ID order by max(score) desc)
+, group_ID
+, score = max(score)
+, r = max(r)
+, c= max(c)
+ from cte 
+group by group_ID 
+
+
+
+
+
+
+
+go 
+
 create or alter function fn_AOC_2024_Day11_WorkStones(@Stones varchar(max)) returns table
 as
 return 
