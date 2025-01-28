@@ -1,37 +1,97 @@
+-- does 201, 200, E exist? 
+-- (score, nxt_r, nxt_c, nd)
+
+-- score,nxt_r,nxt_c,nd|
+-- 1000,(1,2),100|2000,(3,4),500
+-- if exists --r = 1, c = 2 
+-- update it to 1001
+-- and return
+
+go
+
+
+
+create or alter function testing_exists(@score varchar(max)
+								, @r int
+								, @c int
+								, @dir int 
+								-- , @concat varchar(max)
+								)
+returns table as return
+
+ with base as 
+(select input = replace(
+						TRANSLATE(@score, '()', '``' )
+						, '`'
+						, ''
+						)
+), cte as (
+select 
+group_number = main_group.ordinal
+, content =  main_group.VALUE
+, score = case when sub.ordinal = 1 then sub.[value] else null end
+, r = case when sub.ordinal = 2 then sub.[value] else null end
+, c = case when sub.ordinal = 3 then sub.[value] else null end
+, dir = case when sub.ordinal = 4 then sub.[value] else null end
+from base 
+cross APPLY (select * from string_split_rl(input, '|', 1)) main_group
+cross apply (select * from string_split_rl(main_group.value, ',', 1)) sub
+) , brk as (
 select
-group_ID = main.ordinal
-, subgroup_Id = case when sub.ordinal = 1 then 'score'
-				     when sub.ordinal = 2 then 'r'
-					 when sub.ordinal = 3 then 'c'
-				end
-, sub.[value]
- from string_split_RL('(100,100,300)|(100,200,300)|(101,201,301)', '|', 1) main
-cross APPLY
- (select * from string_split_RL(SUBSTRING( [value], 2 , len([value])-2 ), ',', 1)) sub
+ group_number, content 
+, score = max(score)
+, r = max(r)
+, c= max(c)
+, dir = max(dir)
+ from cte 
+group by group_number, content 
+)
+select * from brk 
+where r = @r and c = @c and dir = @dir 
+
+go
+
+
+select * from testing_exists( '1000,(201,200),100' +  REPLICATE( cast( '|2000,(300,400),500' as varchar(max)) , 100 ) 
+							, 201
+							, 200
+							, 100
+							)
+option (maxrecursion 0)
+
+
+go
+
+
+-- select
+-- group_ID = main.ordinal
+-- , subgroup_Id = case when sub.ordinal = 1 then 'score'
+-- 				     when sub.ordinal = 2 then 'r'
+-- 					 when sub.ordinal = 3 then 'c'
+-- 				end
+-- , sub.[value]
+--  from string_split_RL('(100,100,300)|(100,200,300)|(101,201,301)', '|', 1) main
+-- cross APPLY
+--  (select * from string_split_RL(SUBSTRING( [value], 2 , len([value])-2 ), ',', 1)) sub
 
 --score/(nxt_r, nxt_c)/face/curr_r/curr_c|
 --1000/(201, 200)/E/(201, 400)|1000/(201, 200)/E/(2001, 4000)
 
 -- does 201, 200, E exist? 
+-- (score, nxt_r, nxt_c, nd)
 
-; with cte as 
-(
-select 
-* 
-from 
-string_split_rl('1000/(201,200)/E/(201,400)|1000/(201,200)/E/(2001,4000)', '|', 1) og 
-cross apply  
- (select x = TRANSLATE([value], '()', '') ) _ 
-) 
-select * from cte
+-- score,nxt_r,nxt_c,nd|
+-- 1000,(1,2),100|2000,(3,4),500
+-- if exists --r = 1, c = 2 
+-- update it to 1001
+-- and return
 
 
-select * from string_split_RL( 
- (select TRANSLATE('1000/(201,200)/E/(201,400)|1000/(201,200)/E/(2001,4000)', '(,)', ' / '))
- , 
- '|'
- ,1 
-)  
+
+
+
+
+
 
 declare @totalscore bigint, @r int, @c int, @stk varchar(max)
 

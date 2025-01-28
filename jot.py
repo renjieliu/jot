@@ -21,25 +21,6 @@ for y, this_line in enumerate(lines):
             maze[(x, y)] = this_char
 
 
-def draw_path(maze_map: dict, maze_path: list):
-    print()
-    for py in range(0, y_bound):
-        new_line = ''
-        for px in range(0, x_bound):
-            if (px, py) == start:
-                new_line += '⭐'
-            elif (px, py) == goal:
-                new_line += '⭐'
-            elif (px, py) in maze_path :
-                new_line += '👠'
-            elif maze_map[(px, py)] == '#':
-                new_line += '🪨'
-            else:
-                new_line += '◼️'
-        print(new_line)
-    print()
-
-
 def find_path(maze_map: dict, s: tuple, g: tuple):
     d = [(1, 0), (0, 1), (-1, 0), (0, -1)]
     direction = 0
@@ -65,7 +46,8 @@ def find_path(maze_map: dict, s: tuple, g: tuple):
                     new_score = current_score + 1001
                 # else:  # We are turning around
                 #     new_score = current_score + 2001
-                if ((nx, ny), nd) not in visited_from or new_score < scores[((nx, ny), nd)]:
+                if ((nx, ny), nd) not in visited_from or new_score < scores[((nx, ny), nd)]: 
+                    
                     # try:
                     #     if new_score < scores[((nx, ny), nd)]:
                     #         pass
@@ -89,6 +71,25 @@ optimal_path, path_score = find_path(maze, start, goal)
 print(f"Part 1: {path_score}")
 
 
+
+
+def draw_path(maze_map: dict, maze_path: list):
+    print()
+    for py in range(0, y_bound):
+        new_line = ''
+        for px in range(0, x_bound):
+            if (px, py) == start:
+                new_line += '⭐'
+            elif (px, py) == goal:
+                new_line += '⭐'
+            elif (px, py) in maze_path :
+                new_line += '👠'
+            elif maze_map[(px, py)] == '#':
+                new_line += '🪨'
+            else:
+                new_line += '◼️'
+        print(new_line)
+    print()
 
 # import math 
 # import heapq

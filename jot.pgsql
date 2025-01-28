@@ -1,31 +1,48 @@
-with recursive aoc11_input(i) as (select '125 17'),
-parts(i,r,rp) as (
-   select '', i, position(' ' in i) from aoc11_input
+with recursive aoc16_input(i) as (select '
+###############
+#.......#....E#
+#.#.###.#.###.#
+#.....#.#...#.#
+#.###.#####.#.#
+#.#.#.......#.#
+#.#.#####.###.#
+#...........#.#
+###.#.#####.#.#
+#...#.....#.#.#
+#.#.#.###.#.#.#
+#.....#...#.#.#
+#.###.#.#.#.#.#
+#S..#.....#...#
+###############
+'),
+lines(y,line) as (
+   select 0, substr(i,1,position(E'\n' in i)-1), substr(i,position(E'\n' in i)+1)
+   from aoc16_input
    union all
-   select i, r, position(' ' in r)
-   from (select case when rp>0 then substr(r, 0, rp) else r end as i, case when rp>0 then substr(r, rp+1) else '' end as r
-         from parts where r != '') s
+   select y+1,substr(r,1,position(E'\n' in r)-1), substr(r,position(E'\n' in r)+1)
+   from lines l(y,l,r) where position(E'\n' in r)>0
 ),
-startvalues(i) as (select i::bigint from parts where i!=''),
-rounds(r,i,f) as (
-   select 0, i, 1::bigint from startvalues
-   union all
-   select r+1, i, sum(f)::bigint from
-      (with tmp as (select * from rounds where r<75)
-       select r
-       , case when i=0 then 1 
-                when length(i::text)%2=0 then substr(i::text,1,length(i::text)>>1)::bigint 
-                else i*2024 end as i, f
-       from tmp
-       union all
-       select r
-       , substr(i::text,(length(i::text)>>1)+1)::bigint as i
-       , f from tmp
-       where length(i::text)%2=0
-       ) s
-   group by r, i
-)
-select (select sum(f) from rounds where r=25) as part1,
-       (select sum(f) from rounds where r=75) as part2
-;
+field(x,y,v) as (
+   select x::smallint,y::smallint,substr(line,x::integer,1)
+   from (select * from lines l where line<>'') s, lateral generate_series(1,length(line)) g(x)
+),
+walls(x,y) as (select x,y from field where v='#'),
+startpos(x,y) as (select x,y from field where v='S' limit 1),
+endpos(x,y) as (select x,y from field where v='E' limit 1),
+directions(d,dx,dy) as (values(0,1::smallint,0::smallint),(1,0::smallint,1::smallint),(2,-1::smallint,0::smallint),(3,0,-1::smallint)),
+turns(td,tc) as (values(0,0),(1,1000),(2,2000),(3,1000)),
+part1steps(r,x,y,d,c) as (
+   select 0,x,y,0,0 from startpos
+   union all (
+   with tmp(r,x,y,d,c) as (select * from part1steps),
+      agg(r,x,y,d,c) as (select r,x,y,d,min(c) from (
+         select r,x,y,(d+td)%4 as d,c+tc as c from tmp cross join turns
+         ) s group by r,x,y,d)
+      select r+1,(x+dx)::smallint,(y+dy)::smallint,d,c+1
+      from agg a natural join directions where not exists(select * from walls w where a.x+dx=w.x and a.y+dy=w.y)
+      and r<(select count(*) from field)
+   )),
+part1(x,y,d,c) as (select x,y,d,min(c) from (select x,y,(d+td)%4 as d, (c+tc) as c from part1steps cross join turns) group by x,y,d),
+best1(c) as (select min(c) from part1 natural join endpos)
+
 
