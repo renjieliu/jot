@@ -1,56 +1,167 @@
+drop table if exists #input
+
+SELECT 'A' AS Node1, 'B' AS Node2, 2 AS Cost
+into #input
+UNION
+SELECT 'A' AS Node1, 'C' AS Node2, 6 AS Cost
+UNION
+SELECT 'B' AS Node1, 'D' AS Node2, 5 AS Cost
+UNION
+SELECT 'C' AS Node1, 'D' AS Node2, 8 AS Cost
+UNION
+SELECT 'C' AS Node1, 'E' AS Node2, 2 AS Cost
+UNION
+SELECT 'D' AS Node1, 'F' AS Node2, 10 AS Cost
+UNION
+SELECT 'D' AS Node1, 'G' AS Node2, 15 AS Cost
+UNION
+SELECT 'G' AS Node1, 'F' AS Node2, 6 AS Cost
+UNION
+SELECT 'G' AS Node1, 'H' AS Node2, 6 AS Cost
+UNION
+SELECT 'F' AS Node1, 'H' AS Node2, 2 AS Cost
+UNION
+SELECT 'E' AS Node1, 'F' AS Node2, 20 AS Cost
+
+
+insert into #input 
+select node2, node1, cost from #input
+
+
+select * from #input order by 1 
+
 ; with cte as 
-(select col = '#####
-.####
-.####
-.####
-.#.#.
-.#...
-.....
+(
+    select
+     red = cast('A' as varchar(max) ) 
+    , to_reach = cast('A' as varchar(max) ) 
+    , cost = 0
+    , seen =  cast('A' as varchar(max)) 
 
-#####
-##.##
-.#.##
-...##
-...#.
-...#.
-.....
+    union all 
+    
+   select 
+    red_candidate = cast(nxt.Node1 as varchar(max)) -- this node can reach the previous red 
+    , to_reach = cast(nxt.Node2 as varchar(max) ) -- what marked as red, will be the next one to reach
+    , cost = c.cost + nxt.Cost
+    , seen = cast(seen + nxt.Node2 as varchar(max) ) 
+ 
+    from cte c inner join #input nxt 
+    on  nxt.Node1 = c.to_reach
+    where CHARINDEX(nxt.Node2, seen) = 0
 
-.....
-#....
-#....
-#...#
-#.#.#
-#.###
-#####
+)
+select * from cte
+order by to_reach
 
-.....
-.....
-#.#..
-###..
-###.#
-###.#
-#####
+select * from #input
 
-.....
-.....
-.....
-#....
-#.#..
-#.#.#
-#####')
-, cte2 as (
-select col = replace(replace(col, char(10), ''), char(13), '|') from cte
-), cte3 as (
-select id = ROW_NUMBER() over(order by split.ordinal),  split.lines from cte2 cross apply 
-    (select ordinal, lines = [value] from string_split_RL(col, '|', 1)) split  
- where split.lines != ''
-) 
-select 
-grp = (id-1) / 7 
-, ln = (id-1) % 7 + 1 
-, lines
- from cte3
 
+ -- from prev node N to curre C , it's cost C 
+
+
+-- rollback 
+-- DECLARE @Graph NVARCHAR(MAX)= '
+-- SELECT ''A'' AS Node1, ''B'' AS Node2, 2 AS Cost
+-- UNION
+-- SELECT ''A'' AS Node1, ''C'' AS Node2, 6 AS Cost
+-- UNION
+-- SELECT ''B'' AS Node1, ''D'' AS Node2, 5 AS Cost
+-- UNION
+-- SELECT ''C'' AS Node1, ''D'' AS Node2, 8 AS Cost
+-- UNION
+-- SELECT ''C'' AS Node1, ''E'' AS Node2, 2 AS Cost
+-- UNION
+-- SELECT ''D'' AS Node1, ''F'' AS Node2, 10 AS Cost
+-- UNION
+-- SELECT ''D'' AS Node1, ''G'' AS Node2, 15 AS Cost
+-- UNION
+-- SELECT ''G'' AS Node1, ''F'' AS Node2, 6 AS Cost
+-- UNION
+-- SELECT ''G'' AS Node1, ''H'' AS Node2, 6 AS Cost
+-- UNION
+-- SELECT ''F'' AS Node1, ''H'' AS Node2, 2 AS Cost
+-- UNION
+-- SELECT ''E'' AS Node1, ''F'' AS Node2, 20 AS Cost
+-- '
+-- DECLARE @Source VARCHAR(128) = 'A'-- You may put any node here for @Source
+-- DECLARE @Target VARCHAR(128) = 'H'-- You may put any node here for @Target
+-- -- Declarations
+-- DECLARE @ROW_COUNT INT
+-- DECLARE @Cost VARCHAR(16)
+-- DECLARE @Path VARCHAR(MAX)
+-- DECLARE @Node VARCHAR(128)
+-- --  Drop table #Graph
+-- IF OBJECT_ID(N'tempdb..#Graph') IS NOT NULL DROP TABLE #Graph
+-- --  Create table #Graph
+-- CREATE TABLE #Graph (
+-- Node1 VARCHAR(128)
+-- ,Node2 VARCHAR(128)
+-- ,Cost INT 
+-- );
+-- -- Populate table #Graph
+-- INSERT INTO #Graph EXEC dbo.sp_executeSQL @Graph
+-- -- Drop table #RED
+-- IF OBJECT_ID(N'tempdb..#RED') IS NOT NULL DROP TABLE #RED
+-- --  Create table #RED
+-- CREATE TABLE #RED (
+-- step int 
+-- , [prev] VARCHAR(128)
+-- ,[Next] VARCHAR(128)
+-- ,Cost INT 
+-- );
+
+
+
+-- -- Initialize table #RED with @Source
+-- INSERT INTO #RED SELECT step = 0, @Source AS [prev], @Source AS [Next], 0 AS Cost 
+-- -- Populate table #RED according to induction argument
+-- SET @ROW_COUNT = -1
+-- WHILE @ROW_COUNT <> 0
+-- BEGIN
+-- INSERT INTO #RED
+-- SELECT TOP 1
+-- step
+-- , d.[prev]
+--  , d.nxt
+--  , d.Cost FROM-- Select top row from query
+-- (
+-- SELECT 
+-- step = red.step + 1
+-- , prev = Graph.Node2  
+-- , nxt = RED.[prev]  
+-- , cost = Graph.Cost + RED.Cost 
+-- FROM #Graph Graph 
+--      INNER JOIN #RED RED ON Graph.Node1 = RED.[prev]
+--  WHERE Graph.Node2 NOT IN (SELECT [prev] FROM #RED)
+-- ) d
+-- ORDER BY d.Cost ASC-- Pick closest neighbor to @Source
+-- SET @ROW_COUNT = @@ROWCOUNT
+-- END
+
+-- select * from #red
+-- --
+-- -- Display answer 
+-- --
+-- -- Get cost of minimal path from @Target to @Source
+-- SELECT @Cost = Cost FROM #RED WHERE [prev] = @Target  -- @Target may not belong to #RED 
+-- IF @Cost IS NOT NULL  -- @Target belongs to #RED  
+-- BEGIN
+-- -- Build minimal path from @Source to @Target 
+-- SET @Path = @Target
+-- SET @Node = @Target
+-- WHILE @Node <> @Source -- Loop through nodes from @Target to @Source using Next column in #RED
+-- BEGIN
+-- SELECT @Node = [Next] FROM #RED WHERE [Node] = @Node-- Get Next node for current node
+-- SET @Path = @Node + ' --> ' + @Path-- Append to path
+-- END
+-- -- Display minimal path from @Source to @Target
+-- SELECT @Cost AS Cost, @Path AS Path
+-- -- Display all minimal paths
+-- SELECT * FROM #RED
+-- END
+-- ELSE
+-- SELECT -1 AS Cost, '@Source and @Path are not connected' AS Path
 
 
 -- does 201, 200, E exist? 
