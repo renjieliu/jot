@@ -1,86 +1,141 @@
-from collections import defaultdict
-from collections import deque
+import heapq
+
+def dijkstra(graph, start):
+    """
+    Implements Dijkstra's Algorithm to find the shortest paths from the start node.
+    
+    :param graph: Dictionary where keys are nodes and values are lists of (neighbor, weight) tuples.
+    :param start: The starting node.
+    :return: Dictionary with shortest distances from start to each node.
+    """
+    # Min-heap to store (distance, node)
+    min_heap = [(0, start)]
+    shortest_distances = {node: float('inf') for node in graph}
+    shortest_distances[start] = 0
+
+    while min_heap:
+        print(min_heap)
+        current_distance, current_node = heapq.heappop(min_heap)
+
+        # Skip if we already found a shorter path
+        if current_distance > shortest_distances[current_node]:
+            continue
+
+        for neighbor, weight in graph[current_node]:
+            distance = current_distance + weight
+
+            # If found a shorter path, update
+            if distance < shortest_distances[neighbor]:
+                shortest_distances[neighbor] = distance
+                heapq.heappush(min_heap, (distance, neighbor))
+
+    return shortest_distances
+
+# Example usage:
+graph = {
+    'A': [('B', 2), ('C', 6)],
+    'B': [('A', 2), ('D', 5)],
+    'C': [('A', 6), ('D', 8), ('E', 2)],
+    'D': [('B', 5), ('C', 8), ('F', 10), ('G', 15)],
+    'E': [('C', 2), ('F', 20)],
+    'F': [('D', 10), ('G', 6), ('H', 2), ('E', 20)],
+    'G': [('D', 15), ('F', 6), ('H', 6)],
+    'H': [('G', 6), ('F', 2)]
+}
+
+
+start_node = 'A'
+shortest_paths = dijkstra(graph, start_node)
+print(shortest_paths)
 
 
 
-filename = 'jot.txt'
-x_bound = y_bound = 70
-time = 1024
 
 
-def print_map(b_map, b_path: list = None):
-    if b_path is None:
-        b_path = []
-    print()
-    for py in range(y_bound + 1):
-        print_line = ''
-        for px in range(x_bound + 1):
-            if (px, py) in b_path:
-                print_line += '👠'
-            elif b_map[(px, py)] == '#':
-                print_line += '🤖'
-            else:
-                print_line += '◼️'
-        print(print_line)
-    print()
+
+# from collections import defaultdict
+# from collections import deque
 
 
-def find_path(bt: int, byte_list: list):
-    # Use BFS to find a path
-    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-    start = (0, 0)
-    goal = (x_bound, y_bound)
-    b_map = defaultdict(str)
-    # Populate the map with all the falling bytes by time t
-    for t in range(bt):
-        b_map[byte_list[t]] = '#'
 
-    # Queue to check the adjacent squares. This is a deque because we will be removing items from the front
-    move_queue = deque([start])
-    # If you step from square A to square B, then paths[B] = A. Helps reconstruct the path and prevent backtracking
-    paths = dict()
-    paths[start] = None
-    while move_queue:
-        # Remove the oldest item from the queue. Once the queue is empty, this will stop looking
-        current_loc = move_queue.popleft()
-        if current_loc == goal:
-            break
-
-        cx, cy = current_loc
-        # For each neighbor, we'll check if it's in bounds first.
-        # Then if we haven't been there already (in the paths dict) and it's not corrupted, add it to the queue
-        for this_dir in directions:
-            dx, dy = this_dir
-            nx, ny = cx + dx, cy + dy
-            if nx in range(0, x_bound + 1) and ny in range(0, y_bound + 1):
-                if (nx, ny) not in paths and b_map[(nx, ny)] != '#':
-                    move_queue.append((cx + dx, cy + dy))
-                    paths[(cx + dx, cy + dy)] = current_loc
-
-    # Now we will start at the goal and walk backwards along the paths dict to find the actual path
-    current_loc = goal
-    best_path = []
-    while current_loc != start:
-        best_path.append(current_loc)
-        try:
-            current_loc = paths[current_loc]
-        except KeyError:
-            # If we never reached the goal, then paths dict will not have an entry for the goal tuple and will
-            # give a KeyError. Return an empty list
-            return []
-    # If we did reach the goal, return the path
-    return best_path
+# filename = 'jot.txt'
+# x_bound = y_bound = 70
+# time = 1024
 
 
-with open(filename) as f:
-    lines = [line.rstrip() for line in f]
+# def print_map(b_map, b_path: list = None):
+#     if b_path is None:
+#         b_path = []
+#     print()
+#     for py in range(y_bound + 1):
+#         print_line = ''
+#         for px in range(x_bound + 1):
+#             if (px, py) in b_path:
+#                 print_line += '👠'
+#             elif b_map[(px, py)] == '#':
+#                 print_line += '🤖'
+#             else:
+#                 print_line += '◼️'
+#         print(print_line)
+#     print()
 
-falling_bytes = []
-for this_line in lines:
-    bx, by = [int(x) for x in this_line.split(',')]
-    falling_bytes.append((bx, by))
 
-print(f"Part 1: {len(find_path(time, falling_bytes))}")
+# def find_path(bt: int, byte_list: list):
+#     # Use BFS to find a path
+#     directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+#     start = (0, 0)
+#     goal = (x_bound, y_bound)
+#     b_map = defaultdict(str)
+#     # Populate the map with all the falling bytes by time t
+#     for t in range(bt):
+#         b_map[byte_list[t]] = '#'
+
+#     # Queue to check the adjacent squares. This is a deque because we will be removing items from the front
+#     move_queue = deque([start])
+#     # If you step from square A to square B, then paths[B] = A. Helps reconstruct the path and prevent backtracking
+#     paths = dict()
+#     paths[start] = None
+#     while move_queue:
+#         # Remove the oldest item from the queue. Once the queue is empty, this will stop looking
+#         current_loc = move_queue.popleft()
+#         if current_loc == goal:
+#             break
+
+#         cx, cy = current_loc
+#         # For each neighbor, we'll check if it's in bounds first.
+#         # Then if we haven't been there already (in the paths dict) and it's not corrupted, add it to the queue
+#         for this_dir in directions:
+#             dx, dy = this_dir
+#             nx, ny = cx + dx, cy + dy
+#             if nx in range(0, x_bound + 1) and ny in range(0, y_bound + 1):
+#                 if (nx, ny) not in paths and b_map[(nx, ny)] != '#':
+#                     move_queue.append((cx + dx, cy + dy))
+#                     paths[(cx + dx, cy + dy)] = current_loc
+
+#     # Now we will start at the goal and walk backwards along the paths dict to find the actual path
+#     current_loc = goal
+#     best_path = []
+#     while current_loc != start:
+#         best_path.append(current_loc)
+#         try:
+#             current_loc = paths[current_loc]
+#         except KeyError:
+#             # If we never reached the goal, then paths dict will not have an entry for the goal tuple and will
+#             # give a KeyError. Return an empty list
+#             return []
+#     # If we did reach the goal, return the path
+#     return best_path
+
+
+# with open(filename) as f:
+#     lines = [line.rstrip() for line in f]
+
+# falling_bytes = []
+# for this_line in lines:
+#     bx, by = [int(x) for x in this_line.split(',')]
+#     falling_bytes.append((bx, by))
+
+# print(f"Part 1: {len(find_path(time, falling_bytes))}")
 
 
 
