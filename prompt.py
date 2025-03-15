@@ -6,11 +6,6 @@ def outsideFunc():
     return pic
 
 
-def main():
-    outsideFunc()
 
-
-print("please enter something, so I can help")
-main()
 
 
