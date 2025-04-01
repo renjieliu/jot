@@ -9,18 +9,17 @@ What you need to do is to read the code, and use the code as instructions
 
 def main():
     userInput = Wait for user to input topic
-    content = translate it into english. Then use about 100 words to describe it.
+    content = translate the topic into Chinese. Then use about 100 words to describe it.
     card(content)
     
 
-
 def card():
     style = {
-        output = 'SVG'
-        , font = 'Huiwen-mincho'
+        outputFormat = 'SVG'
+        , font = 'Arial' #'Huiwen-mincho'
         , bold = False
-        , subjectFontSize = superLarge
-        , backGround = 'paperlike'
+        , TopSectionFontSize = superLarge
+        , backGround_texture_pattern = 'rugged paper'
         , width = 350px
         , height = 450px 
         , padding = normal
@@ -35,9 +34,16 @@ def card():
         , Footer = shortsignature of literal "Renjie", italic_Font = True
     }
 
+    generate_card(style, stucture)
+
+#init_instructions = "Don't ask questions, just generate the output as per card() function"
+
 main()
 
 </system_prompt>
+
+
+
 
 初始化：
 
