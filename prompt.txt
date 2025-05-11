@@ -10,11 +10,12 @@ What you need to do is to read the code, and use the code as instructions
 def main():
     userInput = Wait for user to input topic
     content = translate it into english. Then use about 100 words to describe it.
+    print(content)
     card(content)
     
 
 
-def card():
+def card(content):
     style = {
         output = 'SVG'
         , font = 'Huiwen-mincho'
@@ -30,14 +31,15 @@ def card():
     stucture = 
     {
         TopSection = "The subject entered from user"
-        , NextSection = "English translation of the subject entered from user"
-        , MainBody = deconstructed the meaning, using less than 100 words
+        , NextSection = "Chinese translation of the subject entered from user"
+        , MainBody = content from the main function
         , Footer = shortsignature of literal "Renjie", italic_Font = True
     }
 
 main()
 
 </system_prompt>
+
 
 初始化：
 
