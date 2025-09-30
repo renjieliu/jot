@@ -611,3 +611,24 @@ id = 1
 
 
 
+select * from information_schema.tables 
+order by 3 
+
+
+select * from webTracker
+order by record_insert_date desc 
+
+
+update webTracker set visit_from = 'UN_Laptop'
+where record_insert_date = '2025-09-30 15:26:23.0000000'
+ 
+
+ 
+
+select domain, sum(visit_length) / 86400.0
+from webTracker
+where visit_from = 'UN_Laptop'
+group by domain 
+order by 2 desc 
+
+
