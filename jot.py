@@ -1,69 +1,87 @@
-import heapq
+string = 'llllllllllllll' 
 
-def dijkstra(graph, start):
-    """
-    Implements Dijkstra's Algorithm to find the shortest paths from the start node.
+output = []
+cnt = 1
+for i in range(1, len(string)):
+    if string[i] == string[i-1]:
+        cnt += 1 
+    else:
+        output.append(string[i-1] + ("" if cnt == 1 else str(cnt) ))
+        cnt = 1
     
-    :param graph: Dictionary where keys are nodes and values are lists of (neighbor, weight) tuples.
-    :param start: The starting node.
-    :return: Dictionary with shortest distances from start to each node.
-    """
-    # Min-heap to store (distance, node)
-    min_heap = [(0, start)]
-    shortest_distances = {node: float('inf') for node in graph}
-    shortest_distances[start] = 0
+output.append(string[-1] + ("" if cnt == 1 else str(cnt) ))
 
-    while min_heap:
-        # print(min_heap)
-        current_distance, current_node = heapq.heappop(min_heap)
+print(''.join(output))
 
-        # Skip if we already found a shorter path
-        if current_distance > shortest_distances[current_node]:
-            continue
 
-        for neighbor, weight in graph[current_node]:
-            distance = current_distance + weight
 
-            # If found a shorter path, update
-            if distance < shortest_distances[neighbor]:
-                shortest_distances[neighbor] = distance
-                heapq.heappush(min_heap, (distance, neighbor))
 
-    return shortest_distances
+# import heapq
 
-# Example usage:
-graph = {
-    'A': [('B', 2), ('C', 6)],
-    'B': [('A', 2), ('D', 5), ('E', 3)],
-    'C': [('A', 6), ('D', 8), ('F', 4)],
-    'D': [('B', 5), ('C', 8), ('G', 7), ('H', 6)],
-    'E': [('B', 3), ('I', 5), ('J', 9)],
-    'F': [('C', 4), ('J', 2), ('K', 8)],
-    'G': [('D', 7), ('L', 3), ('M', 4)],
-    'H': [('D', 6), ('M', 7), ('N', 5)],
-    'I': [('E', 5), ('O', 6)],
-    'J': [('E', 9), ('F', 2), ('O', 3), ('P', 7)],
-    'K': [('F', 8), ('P', 2), ('Q', 5)],
-    'L': [('G', 3), ('Q', 4), ('R', 6)],
-    'M': [('G', 4), ('H', 7), ('R', 5)],
-    'N': [('H', 5), ('S', 6), ('T', 8)],
-    'O': [('I', 6), ('J', 3), ('U', 4)],
-    'P': [('J', 7), ('K', 2), ('V', 6)],
-    'Q': [('K', 5), ('L', 4), ('W', 7)],
-    'R': [('L', 6), ('M', 5), ('X', 5)],
-    'S': [('N', 6), ('T', 3), ('Y', 7)],
-    'T': [('N', 8), ('S', 3), ('Z', 6)],
-    'U': [('O', 4), ('V', 2)],
-    'V': [('P', 6), ('U', 2), ('W', 4)],
-    'W': [('Q', 7), ('V', 4), ('X', 6)],
-    'X': [('R', 5), ('W', 6), ('Y', 4)],
-    'Y': [('S', 7), ('X', 4), ('Z', 3)],
-    'Z': [('T', 6), ('Y', 3)]
-}
+# def dijkstra(graph, start):
+#     """
+#     Implements Dijkstra's Algorithm to find the shortest paths from the start node.
+    
+#     :param graph: Dictionary where keys are nodes and values are lists of (neighbor, weight) tuples.
+#     :param start: The starting node.
+#     :return: Dictionary with shortest distances from start to each node.
+#     """
+#     # Min-heap to store (distance, node)
+#     min_heap = [(0, start)]
+#     shortest_distances = {node: float('inf') for node in graph}
+#     shortest_distances[start] = 0
 
-start_node = 'A'
-shortest_paths = dijkstra(graph, start_node)
-print(shortest_paths)
+#     while min_heap:
+#         # print(min_heap)
+#         current_distance, current_node = heapq.heappop(min_heap)
+
+#         # Skip if we already found a shorter path
+#         if current_distance > shortest_distances[current_node]:
+#             continue
+
+#         for neighbor, weight in graph[current_node]:
+#             distance = current_distance + weight
+
+#             # If found a shorter path, update
+#             if distance < shortest_distances[neighbor]:
+#                 shortest_distances[neighbor] = distance
+#                 heapq.heappush(min_heap, (distance, neighbor))
+
+#     return shortest_distances
+
+# # Example usage:
+# graph = {
+#     'A': [('B', 2), ('C', 6)],
+#     'B': [('A', 2), ('D', 5), ('E', 3)],
+#     'C': [('A', 6), ('D', 8), ('F', 4)],
+#     'D': [('B', 5), ('C', 8), ('G', 7), ('H', 6)],
+#     'E': [('B', 3), ('I', 5), ('J', 9)],
+#     'F': [('C', 4), ('J', 2), ('K', 8)],
+#     'G': [('D', 7), ('L', 3), ('M', 4)],
+#     'H': [('D', 6), ('M', 7), ('N', 5)],
+#     'I': [('E', 5), ('O', 6)],
+#     'J': [('E', 9), ('F', 2), ('O', 3), ('P', 7)],
+#     'K': [('F', 8), ('P', 2), ('Q', 5)],
+#     'L': [('G', 3), ('Q', 4), ('R', 6)],
+#     'M': [('G', 4), ('H', 7), ('R', 5)],
+#     'N': [('H', 5), ('S', 6), ('T', 8)],
+#     'O': [('I', 6), ('J', 3), ('U', 4)],
+#     'P': [('J', 7), ('K', 2), ('V', 6)],
+#     'Q': [('K', 5), ('L', 4), ('W', 7)],
+#     'R': [('L', 6), ('M', 5), ('X', 5)],
+#     'S': [('N', 6), ('T', 3), ('Y', 7)],
+#     'T': [('N', 8), ('S', 3), ('Z', 6)],
+#     'U': [('O', 4), ('V', 2)],
+#     'V': [('P', 6), ('U', 2), ('W', 4)],
+#     'W': [('Q', 7), ('V', 4), ('X', 6)],
+#     'X': [('R', 5), ('W', 6), ('Y', 4)],
+#     'Y': [('S', 7), ('X', 4), ('Z', 3)],
+#     'Z': [('T', 6), ('Y', 3)]
+# }
+
+# start_node = 'A'
+# shortest_paths = dijkstra(graph, start_node)
+# print(shortest_paths)
 
 
 
