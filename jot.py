@@ -1,11 +1,4 @@
-a = [1,2,4]
-b = [1,2,3] 
-
-print (list(sorted((set(a) & set(b)))[::-1]))
-
-
-
-# import heapq
+import heapq
 
 # def dijkstra(graph, start):
 #     """
