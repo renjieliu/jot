@@ -8,6 +8,8 @@ import duckdb
 
 
 with duckdb.connect() as conn:
-     sql = 'select * from '
-
-
+     sql = 'select 1+1 id '
+     df = conn.execute(sql).df()
+     print(df)
+     
+     
