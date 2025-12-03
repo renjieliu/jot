@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 CREATE TABLE   ProductPurchases (
     user_id INT,
     product_id INT,
@@ -279,6 +280,12 @@ order by 3 desc, 1, 2
 -- order by TABLE_NAME
 
 -- select * from meal
+=======
+select STUFF('hello world', 2, 0, '__insert___') ;
+ 
+>>>>>>> 0f1c409abfdd0f850abab8de394031d5a5b8db3e
+
+
 
 /*
 -- create or alter function heappop(@heapString varchar(max))
