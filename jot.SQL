@@ -1,7 +1,284 @@
-select STUFF('hello world', 2, 0, '__insert___') ; 
+CREATE TABLE   ProductPurchases (
+    user_id INT,
+    product_id INT,
+    quantity INT
+)
+
+CREATE TABLE  ProductInfo (
+    product_id INT,
+    category VARCHAR(100),
+    price DECIMAL(10, 2)
+)
+
+Truncate table ProductPurchases
+insert into ProductPurchases (user_id, product_id, quantity) values ('1', '101', '2')
+insert into ProductPurchases (user_id, product_id, quantity) values ('1', '102', '1')
+insert into ProductPurchases (user_id, product_id, quantity) values ('1', '201', '3')
+insert into ProductPurchases (user_id, product_id, quantity) values ('1', '301', '1')
+insert into ProductPurchases (user_id, product_id, quantity) values ('2', '101', '1')
+insert into ProductPurchases (user_id, product_id, quantity) values ('2', '102', '2')
+insert into ProductPurchases (user_id, product_id, quantity) values ('2', '103', '1')
+insert into ProductPurchases (user_id, product_id, quantity) values ('2', '201', '5')
+insert into ProductPurchases (user_id, product_id, quantity) values ('3', '101', '2')
+insert into ProductPurchases (user_id, product_id, quantity) values ('3', '103', '1')
+insert into ProductPurchases (user_id, product_id, quantity) values ('3', '301', '4')
+insert into ProductPurchases (user_id, product_id, quantity) values ('3', '401', '2')
+insert into ProductPurchases (user_id, product_id, quantity) values ('4', '101', '1')
+insert into ProductPurchases (user_id, product_id, quantity) values ('4', '201', '3')
+insert into ProductPurchases (user_id, product_id, quantity) values ('4', '301', '1')
+insert into ProductPurchases (user_id, product_id, quantity) values ('4', '401', '2')
+insert into ProductPurchases (user_id, product_id, quantity) values ('5', '102', '2')
+insert into ProductPurchases (user_id, product_id, quantity) values ('5', '103', '1')
+insert into ProductPurchases (user_id, product_id, quantity) values ('5', '201', '2')
+insert into ProductPurchases (user_id, product_id, quantity) values ('5', '202', '3')
+Truncate table ProductInfo
+insert into ProductInfo (product_id, category, price) values ('101', 'Electronics', '100')
+insert into ProductInfo (product_id, category, price) values ('102', 'Books', '20')
+insert into ProductInfo (product_id, category, price) values ('103', 'Books', '35')
+insert into ProductInfo (product_id, category, price) values ('201', 'Clothing', '45')
+insert into ProductInfo (product_id, category, price) values ('202', 'Clothing', '60')
+insert into ProductInfo (product_id, category, price) values ('301', 'Sports', '75')
+insert into ProductInfo (product_id, category, price) values ('401', 'Kitchen', '50')
 
 
- 
+/* Write your T-SQL query statement below */
+; with pair as -- to find all the possible pairs
+(select 
+p1 = p1.product_id
+, p2 = p2.product_id 
+, category1 = p1.category
+, category2 = p2.category
+from ProductInfo p1 
+inner join ProductInfo p2 on p1.category < p2.category
+)
+select 
+pair.category1
+, pair.category2
+, customer_count = count(distinct pp1.user_id)
+ from pair 
+inner join ProductPurchases pp1 on pair.p1 = pp1.product_id 
+inner join ProductPurchases pp2 on pair.p2 = pp2.product_id and pp2.user_id = pp1.user_id
+group by 
+pair.category1
+, pair.category2
+having count(distinct pp1.user_id) >= 3 
+order by 3 desc, 1, 2 
+
+
+
+
+--  CREATE TABLE  students (
+--     student_id INT,
+--     student_name VARCHAR(255),
+--     major VARCHAR(100)
+-- )
+
+
+-- CREATE TABLE study_sessions (
+--     session_id INT,
+--     student_id INT,
+--     subject VARCHAR(100),
+--     session_date DATE,
+--     hours_studied DECIMAL(4, 2)
+-- )
+
+-- Truncate table students
+
+-- insert into students (student_id, student_name, major) values ('1', 'Alice Chen', 'Computer Science')
+-- insert into students (student_id, student_name, major) values ('2', 'Bob Johnson', 'Mathematics')
+-- insert into students (student_id, student_name, major) values ('3', 'Carol Davis', 'Physics')
+-- insert into students (student_id, student_name, major) values ('4', 'David Wilson', 'Chemistry')
+-- insert into students (student_id, student_name, major) values ('5', 'Emma Brown', 'Biology')
+-- Truncate table study_sessions
+
+-- --insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('1', '1', 'English', '2023-09-30', '2.5')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('1', '1', 'Math', '2023-10-01', '2.5')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('2', '1', 'Physics', '2023-10-01', '3.0')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('3', '1', 'Chemistry', '2023-10-01', '2.0')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('4', '1', 'Math', '2023-10-02', '2.5')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('5', '1', 'Physics', '2023-10-02', '3.0')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('6', '1', 'Chemistry', '2023-10-02', '2.0')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('7', '2', 'Algebra', '2023-10-01', '4.0')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('8', '2', 'Calculus', '2023-10-02', '3.5')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('9', '2', 'Statistics', '2023-10-03', '2.5')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('10', '2', 'Geometry', '2023-10-04', '3.0')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('11', '2', 'Algebra', '2023-10-05', '4.0')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('12', '2', 'Calculus', '2023-10-06', '3.5')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('13', '2', 'Statistics', '2023-10-07', '2.5')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('14', '2', 'Geometry', '2023-10-08', '3.0')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('15', '3', 'Biology', '2023-10-01', '2.0')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('16', '3', 'Chemistry', '2023-10-02', '2.5')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('17', '3', 'Biology', '2023-10-03', '2.0')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('18', '3', 'Chemistry', '2023-10-04', '2.5')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('19', '3', 'Organic', '2023-10-01', '3.0')
+-- insert into study_sessions (session_id, student_id, subject, session_date, hours_studied) values ('20', '3', 'Physical', '2023-10-05', '2.5')
+
+-- go 
+
+
+-- -- select * from study_sessions 
+
+-- ; with base as 
+-- (
+--     select rn = ROW_NUMBER() over(partition by student_id order by session_date, subject)
+--          ,  *
+--     from study_sessions
+
+-- )
+-- , cte as (
+-- select
+-- rn
+-- , student_id
+-- , subject
+-- , session_date
+-- , cycle_Start = session_date
+-- , courses = cast(subject as varchar(max))
+-- , course_cnt = 1 
+-- from base 
+-- union all 
+
+-- select
+-- b.rn 
+-- , b.student_id 
+-- , b.subject 
+-- , b.session_date
+-- , cycle_Start
+-- , cast(courses+ ',' + b.subject as varchar(max))
+-- , course_cnt + 1
+-- from cte c inner join base b 
+-- on c.student_id = b.student_id and b.rn = c.rn + 1 and DATEDIFF(day, c.session_date, b.session_date) <= 2
+-- where charindex(b.subject, c.courses) = 0 
+-- ), staging1 as 
+-- (
+-- select 
+-- c1.student_id
+-- , c1.courses
+-- , c1.course_cnt
+-- , c1.cycle_Start
+-- , c1.session_date
+-- , session_cnt = count(*) over (partition by student_id, courses) from cte c1
+-- where not exists (select * from cte c2 where c2.student_id = c1.student_id and c2.course_cnt > c1.course_cnt)
+-- and c1.course_cnt >= 3
+-- ), staging2 as 
+-- (
+-- select *
+-- , nxt_session_starts_in_2_days = iif( 2 >= DATEDIFF(day, session_date, lead(cycle_start, 1) over (partition by student_id, courses order by cycle_Start))  , 1, 0)
+-- from staging1
+-- where session_cnt  > 1
+-- ) 
+
+-- select 
+-- distinct
+-- c1.student_id
+-- , student_name = s.student_name
+-- , s.major
+-- , cycle_length = c1.course_cnt
+-- , total_study_hours = (select sum(hours_studied) from study_sessions ss where ss.student_id = s.student_id)
+-- from staging2 c1 inner join students s on c1.student_id = s.student_id
+-- where c1.nxt_session_starts_in_2_days = 1
+-- order by c1.course_cnt desc , total_study_hours desc 
+
+
+
+
+
+
+-- CREATE TABLE app_events (
+--     event_id INT,
+--     user_id INT,
+--     event_timestamp DATETIME,
+--     event_type VARCHAR(20),
+--     session_id VARCHAR(10),
+--     event_value INT
+-- )
+-- Truncate table app_events
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('1', '201', '2024-03-01 10:00:00', 'app_open', 'S001', NULL)
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('2', '201', '2024-03-01 10:05:00', 'scroll', 'S001', '500')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('3', '201', '2024-03-01 10:10:00', 'scroll', 'S001', '750')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('4', '201', '2024-03-01 10:15:00', 'scroll', 'S001', '600')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('5', '201', '2024-03-01 10:20:00', 'scroll', 'S001', '800')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('6', '201', '2024-03-01 10:25:00', 'scroll', 'S001', '550')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('7', '201', '2024-03-01 10:30:00', 'scroll', 'S001', '900')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('8', '201', '2024-03-01 10:35:00', 'app_close', 'S001', NULL)
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('9', '202', '2024-03-01 11:00:00', 'app_open', 'S002', NULL)
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('10', '202', '2024-03-01 11:02:00', 'click', 'S002', NULL)
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('11', '202', '2024-03-01 11:05:00', 'scroll', 'S002', '400')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('12', '202', '2024-03-01 11:08:00', 'click', 'S002', NULL)
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('13', '202', '2024-03-01 11:10:00', 'scroll', 'S002', '350')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('14', '202', '2024-03-01 11:15:00', 'purchase', 'S002', '50')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('15', '202', '2024-03-01 11:20:00', 'app_close', 'S002', NULL)
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('16', '203', '2024-03-01 12:00:00', 'app_open', 'S003', NULL)
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('17', '203', '2024-03-01 12:10:00', 'scroll', 'S003', '1000')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('18', '203', '2024-03-01 12:20:00', 'scroll', 'S003', '1200')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('19', '203', '2024-03-01 12:25:00', 'click', 'S003', NULL)
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('20', '203', '2024-03-01 12:30:00', 'scroll', 'S003', '800')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('21', '203', '2024-03-01 12:40:00', 'scroll', 'S003', '900')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('22', '203', '2024-03-01 12:50:00', 'scroll', 'S003', '1100')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('23', '203', '2024-03-01 13:00:00', 'app_close', 'S003', NULL)
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('24', '204', '2024-03-01 14:00:00', 'app_open', 'S004', NULL)
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('25', '204', '2024-03-01 14:05:00', 'scroll', 'S004', '600')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('26', '204', '2024-03-01 14:08:00', 'scroll', 'S004', '700')
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('27', '204', '2024-03-01 14:10:00', 'click', 'S004', NULL)
+-- insert into app_events (event_id, user_id, event_timestamp, event_type, session_id, event_value) values ('28', '204', '2024-03-01 14:12:00', 'app_close', 'S004', NULL)
+
+
+-- ; with duration as 
+-- ( 
+-- select distinct s.session_id, s.user_id, duration = datediff(minute, s.event_timestamp, e.event_timestamp) from app_events s inner join app_events e
+-- on s.session_id = e.session_id 
+-- where s.event_type = 'app_open'
+-- and e.event_type = 'app_close'
+-- ), scroll_cnt as 
+-- (
+-- select s.session_id,user_id, cnt = count(*)  from app_events s 
+-- where event_type = 'scroll'
+-- group by s.session_id, user_id
+-- )
+-- , click_cnt as 
+-- (   select s.session_id, user_id, click_cnt = isnull( count(click.event_id), 0 )
+--     from (select distinct session_id from app_events) s  
+--     left outer join app_events click 
+--     on s.session_id = click.session_id  and click.event_type= 'click' 
+--     group by s.session_id , user_id
+-- )
+-- , click_scroll_ratio as 
+-- (
+--     select cc.session_id, cc.user_id, ratio = 1.0*cc.click_cnt / sc.cnt from click_cnt cc left outer join scroll_cnt sc 
+--     on cc.session_id = sc.session_id 
+-- ) 
+-- , no_purchase  as 
+-- (
+--     select s1.session_id from app_events s1 
+--     where not exists ( select * from app_events s2 where s2.session_id = s1.session_id and s2.event_type = 'purchase')
+-- ), res_session as 
+-- (
+-- select s.session_id from duration s where duration > 30 
+-- intersect 
+-- select s.session_id from scroll_cnt s 
+-- where cnt >= 5 
+-- intersect 
+-- select s.session_id from click_scroll_ratio s 
+-- where ratio < 0.2
+-- intersect 
+-- select s.session_id from no_purchase s
+-- ) 
+-- select
+-- r.session_id 
+-- , d.user_id 
+-- , session_duration_minutes = d.duration
+-- , scroll_count = s.cnt
+-- from res_session r inner join duration d on r.session_id = d.session_id 
+-- inner join scroll_cnt s on r.session_id = s.session_id 
+-- order by s.cnt desc , r.session_id  
+
+
+
+-- select STUFF('hello world', 2, 0, '__insert___') ; 
+
+-- select * from INFORMATION_SCHEMA.tables 
+-- order by TABLE_NAME
+
+-- select * from meal
 
 /*
 -- create or alter function heappop(@heapString varchar(max))
