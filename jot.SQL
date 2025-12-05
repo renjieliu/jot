@@ -1,68 +1,73 @@
-CREATE TABLE   ProductPurchases (
-    user_id INT,
-    product_id INT,
-    quantity INT
-)
-
-CREATE TABLE  ProductInfo (
-    product_id INT,
-    category VARCHAR(100),
-    price DECIMAL(10, 2)
-)
-
-Truncate table ProductPurchases
-insert into ProductPurchases (user_id, product_id, quantity) values ('1', '101', '2')
-insert into ProductPurchases (user_id, product_id, quantity) values ('1', '102', '1')
-insert into ProductPurchases (user_id, product_id, quantity) values ('1', '201', '3')
-insert into ProductPurchases (user_id, product_id, quantity) values ('1', '301', '1')
-insert into ProductPurchases (user_id, product_id, quantity) values ('2', '101', '1')
-insert into ProductPurchases (user_id, product_id, quantity) values ('2', '102', '2')
-insert into ProductPurchases (user_id, product_id, quantity) values ('2', '103', '1')
-insert into ProductPurchases (user_id, product_id, quantity) values ('2', '201', '5')
-insert into ProductPurchases (user_id, product_id, quantity) values ('3', '101', '2')
-insert into ProductPurchases (user_id, product_id, quantity) values ('3', '103', '1')
-insert into ProductPurchases (user_id, product_id, quantity) values ('3', '301', '4')
-insert into ProductPurchases (user_id, product_id, quantity) values ('3', '401', '2')
-insert into ProductPurchases (user_id, product_id, quantity) values ('4', '101', '1')
-insert into ProductPurchases (user_id, product_id, quantity) values ('4', '201', '3')
-insert into ProductPurchases (user_id, product_id, quantity) values ('4', '301', '1')
-insert into ProductPurchases (user_id, product_id, quantity) values ('4', '401', '2')
-insert into ProductPurchases (user_id, product_id, quantity) values ('5', '102', '2')
-insert into ProductPurchases (user_id, product_id, quantity) values ('5', '103', '1')
-insert into ProductPurchases (user_id, product_id, quantity) values ('5', '201', '2')
-insert into ProductPurchases (user_id, product_id, quantity) values ('5', '202', '3')
-Truncate table ProductInfo
-insert into ProductInfo (product_id, category, price) values ('101', 'Electronics', '100')
-insert into ProductInfo (product_id, category, price) values ('102', 'Books', '20')
-insert into ProductInfo (product_id, category, price) values ('103', 'Books', '35')
-insert into ProductInfo (product_id, category, price) values ('201', 'Clothing', '45')
-insert into ProductInfo (product_id, category, price) values ('202', 'Clothing', '60')
-insert into ProductInfo (product_id, category, price) values ('301', 'Sports', '75')
-insert into ProductInfo (product_id, category, price) values ('401', 'Kitchen', '50')
 
 
-/* Write your T-SQL query statement below */
-; with pair as -- to find all the possible pairs
-(select 
-p1 = p1.product_id
-, p2 = p2.product_id 
-, category1 = p1.category
-, category2 = p2.category
-from ProductInfo p1 
-inner join ProductInfo p2 on p1.category < p2.category
-)
-select 
-pair.category1
-, pair.category2
-, customer_count = count(distinct pp1.user_id)
- from pair 
-inner join ProductPurchases pp1 on pair.p1 = pp1.product_id 
-inner join ProductPurchases pp2 on pair.p2 = pp2.product_id and pp2.user_id = pp1.user_id
-group by 
-pair.category1
-, pair.category2
-having count(distinct pp1.user_id) >= 3 
-order by 3 desc, 1, 2 
+
+
+
+-- CREATE TABLE   ProductPurchases (
+--     user_id INT,
+--     product_id INT,
+--     quantity INT
+-- )
+
+-- CREATE TABLE  ProductInfo (
+--     product_id INT,
+--     category VARCHAR(100),
+--     price DECIMAL(10, 2)
+-- )
+
+-- Truncate table ProductPurchases
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('1', '101', '2')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('1', '102', '1')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('1', '201', '3')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('1', '301', '1')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('2', '101', '1')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('2', '102', '2')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('2', '103', '1')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('2', '201', '5')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('3', '101', '2')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('3', '103', '1')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('3', '301', '4')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('3', '401', '2')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('4', '101', '1')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('4', '201', '3')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('4', '301', '1')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('4', '401', '2')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('5', '102', '2')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('5', '103', '1')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('5', '201', '2')
+-- insert into ProductPurchases (user_id, product_id, quantity) values ('5', '202', '3')
+-- Truncate table ProductInfo
+-- insert into ProductInfo (product_id, category, price) values ('101', 'Electronics', '100')
+-- insert into ProductInfo (product_id, category, price) values ('102', 'Books', '20')
+-- insert into ProductInfo (product_id, category, price) values ('103', 'Books', '35')
+-- insert into ProductInfo (product_id, category, price) values ('201', 'Clothing', '45')
+-- insert into ProductInfo (product_id, category, price) values ('202', 'Clothing', '60')
+-- insert into ProductInfo (product_id, category, price) values ('301', 'Sports', '75')
+-- insert into ProductInfo (product_id, category, price) values ('401', 'Kitchen', '50')
+
+
+-- /* Write your T-SQL query statement below */
+-- ; with pair as -- to find all the possible pairs
+-- (select 
+-- p1 = p1.product_id
+-- , p2 = p2.product_id 
+-- , category1 = p1.category
+-- , category2 = p2.category
+-- from ProductInfo p1 
+-- inner join ProductInfo p2 on p1.category < p2.category
+-- )
+-- select 
+-- pair.category1
+-- , pair.category2
+-- , customer_count = count(distinct pp1.user_id)
+--  from pair 
+-- inner join ProductPurchases pp1 on pair.p1 = pp1.product_id 
+-- inner join ProductPurchases pp2 on pair.p2 = pp2.product_id and pp2.user_id = pp1.user_id
+-- group by 
+-- pair.category1
+-- , pair.category2
+-- having count(distinct pp1.user_id) >= 3 
+-- order by 3 desc, 1, 2 
 
 
 
