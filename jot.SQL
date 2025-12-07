@@ -9,6 +9,8 @@ select 1+1;
 
 
 
+
+
 -- CREATE TABLE   ProductPurchases (
 --     user_id INT,
 --     product_id INT,
