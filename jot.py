@@ -1,28 +1,31 @@
-# s = '5212221333223223642257233232272642637612321222242222326772231222771342132342272214328275121812237221' 
-from functools import lru_cache
+print('hello'.find('i'))
 
-s='98767615212221333223223642257233232272642637612321222242222326772231222771342132342272214328275121812237221111'
 
-with open("input.txt") as f:
-    s = f.readlines()
+# # s = '5212221333223223642257233232272642637612321222242222326772231222771342132342272214328275121812237221' 
+# from functools import lru_cache
 
-@lru_cache
-def find_max(s, n):
+# s='98767615212221333223223642257233232272642637612321222242222326772231222771342132342272214328275121812237221111'
+
+# with open("input.txt") as f:
+#     s = f.readlines()
+
+# @lru_cache
+# def find_max(s, n):
     
-    if len(s) == n:
-        return s
-    elif n == 1:
-        return str(max(list(s)))
-    else: 
-        A = s[0] + find_max(s[1:], n-1)
-        B = find_max(s[1:], n)
-        return str(max(int(A), int(B)))
+#     if len(s) == n:
+#         return s
+#     elif n == 1:
+#         return str(max(list(s)))
+#     else: 
+#         A = s[0] + find_max(s[1:], n-1)
+#         B = find_max(s[1:], n)
+#         return str(max(int(A), int(B)))
 
-total = 0
-for curr in s:
-    total += int(find_max(curr, 12))
+# total = 0
+# for curr in s:
+#     total += int(find_max(curr, 12))
 
-print(total)
+# print(total)
 
 # print(max(list('12123198234')))
 
