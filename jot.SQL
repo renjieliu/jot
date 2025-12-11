@@ -1,4 +1,12 @@
-select STUFF('hello world', 2, 0, '__insert___') ; 
+
+
+
+-- select STUFF('hello world', 2, 0, '__insert___') ; 
+
+
+
+
+
 
 
  
