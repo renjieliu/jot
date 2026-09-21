@@ -3,12 +3,6 @@ select STUFF('hello world', 2, 0, '__insert___') ;
 
 
 
-select DATEADD(day, 90, '2025-10-18' )
-
-
-
-
-
 
 
 
